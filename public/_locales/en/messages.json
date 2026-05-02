@@ -44,6 +44,18 @@
     "message": "Something went wrong. Please contact me writing the error below.",
     "description": "Translation error message"
   },
+  "popNoTranslationTitle": {
+    "message": "No translation found",
+    "description": "Title shown when WordReference has no direct translation result"
+  },
+  "popNoTranslationMessage": {
+    "message": "Try one of these similar words instead.",
+    "description": "Fallback message shown when a translation is not found"
+  },
+  "popSimilarWordsLabel": {
+    "message": "Similar words",
+    "description": "Label shown above similar words in the not-found fallback card"
+  },
 
   
   "optTitle": {

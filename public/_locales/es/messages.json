@@ -35,6 +35,18 @@
     "message": "Algo sali\u00f3 mal. Por favor, cont\u00e1cteme indicando el siguiente error.",
     "description": "Translation error message"
   },
+  "popNoTranslationTitle": {
+    "message": "No se encontr\u00f3 ninguna traducci\u00f3n",
+    "description": "Title shown when WordReference has no direct translation result"
+  },
+  "popNoTranslationMessage": {
+    "message": "Prueba con una de estas palabras similares.",
+    "description": "Fallback message shown when a translation is not found"
+  },
+  "popSimilarWordsLabel": {
+    "message": "Palabras similares",
+    "description": "Label shown above similar words in the not-found fallback card"
+  },
   "optTitle": {
     "message": "Opciones",
     "description": "'Settings' - Title shown on the browser tab"

@@ -11,6 +11,15 @@ const WORDREFERENCE_ROOT = "https://www.wordreference.com";
 const VALID_QUERY_RE = /^[^<>%\\]*$/;
 const HAS_RESULTS_RE =
   /id=["']articleWRD["'][\s\S]*?(?:<tr|class=["']WRD["'])/i;
+const HAS_NOT_FOUND_RE = /id=["']noTransFound["']/i;
+
+type LookupClassification = "found" | "not_found" | "unexpected";
+
+interface LookupAttempt {
+  html: string;
+  meta: TranslationMeta;
+  classification: LookupClassification;
+}
 
 function normalizeWord(input: string): string {
   return input.trim();
@@ -26,21 +35,58 @@ function buildLookupUrl(dict1: string, dict2: string, word: string): string {
   return `${WORDREFERENCE_ROOT}/${dict1}${dict2}/${encodeURIComponent(word)}`;
 }
 
-function hasResults(html: string): boolean {
-  return HAS_RESULTS_RE.test(html);
+function classifyLookupHtml(html: string): LookupClassification {
+  if (HAS_RESULTS_RE.test(html)) {
+    return "found";
+  }
+
+  if (HAS_NOT_FOUND_RE.test(html)) {
+    return "not_found";
+  }
+
+  return "unexpected";
 }
 
-async function fetchLookup(url: string): Promise<string> {
+async function fetchLookup(
+  url: string,
+): Promise<{ html: string; ok: boolean; status: number }> {
   const response = await fetch(url, {
     method: "GET",
     credentials: "omit",
   });
 
-  if (!response.ok) {
+  return {
+    html: await response.text(),
+    ok: response.ok,
+    status: response.status,
+  };
+}
+
+async function fetchLookupAttempt(
+  dict1: Exclude<LanguageCode, "auto">,
+  dict2: Exclude<LanguageCode, "auto">,
+  word: string,
+): Promise<LookupAttempt> {
+  const url = buildLookupUrl(dict1, dict2, word);
+  const response = await fetchLookup(url);
+  const classification = classifyLookupHtml(response.html);
+
+  if (!response.ok && classification === "unexpected") {
     throw new Error(`Error contacting wordreference.com: ${response.status}`);
   }
 
-  return response.text();
+  return {
+    html: response.html,
+    meta: {
+      requestedDict1: dict1,
+      requestedDict2: dict2,
+      resolvedDict1: dict1,
+      resolvedDict2: dict2,
+      sourceUrl: url,
+      queriedWord: word,
+    },
+    classification,
+  };
 }
 
 async function fetchDirectOrInverted(
@@ -49,53 +95,67 @@ async function fetchDirectOrInverted(
   word: string,
   allowInvert = true,
 ): Promise<TranslationResponse> {
-  const directUrl = buildLookupUrl(dict1, dict2, word);
-  const directHtml = await fetchLookup(directUrl);
+  const direct = await fetchLookupAttempt(dict1, dict2, word);
 
-  if (hasResults(directHtml)) {
-    const meta: TranslationMeta = {
-      requestedDict1: dict1,
-      requestedDict2: dict2,
-      resolvedDict1: dict1,
-      resolvedDict2: dict2,
-      sourceUrl: directUrl,
-      queriedWord: word,
-    };
-    return { ok: true, html: directHtml, meta };
+  if (direct.classification === "found") {
+    return { ok: true, html: direct.html, meta: direct.meta };
+  }
+
+  if (direct.classification === "unexpected") {
+    throw new Error("Unexpected WordReference response format");
   }
 
   if (!allowInvert) {
-    throw new Error(`No result found for ${word}`);
+    return { ok: true, html: direct.html, meta: direct.meta };
   }
 
-  const invertedUrl = buildLookupUrl(dict2, dict1, word);
-  const invertedHtml = await fetchLookup(invertedUrl);
+  const inverted = await fetchLookupAttempt(dict2, dict1, word);
 
-  if (!hasResults(invertedHtml)) {
-    throw new Error(`No result found for ${word}`);
+  if (inverted.classification === "found") {
+    return { ok: true, html: inverted.html, meta: inverted.meta };
   }
 
-  const meta: TranslationMeta = {
-    requestedDict1: dict1,
-    requestedDict2: dict2,
-    resolvedDict1: dict2,
-    resolvedDict2: dict1,
-    sourceUrl: invertedUrl,
-    queriedWord: word,
-  };
-  return { ok: true, html: invertedHtml, meta };
+  if (inverted.classification === "unexpected") {
+    throw new Error("Unexpected WordReference response format");
+  }
+
+  return { ok: true, html: direct.html, meta: direct.meta };
 }
 
 async function fetchAutoDetect(
   dict2: Exclude<LanguageCode, "auto">,
   word: string,
 ): Promise<TranslationResponse> {
+  let firstNotFound: LookupAttempt | null = null;
+  let lastUnexpectedError: Error | null = null;
+
   for (const dict1 of getAutoDetectCandidateLanguages(dict2)) {
     try {
-      return await fetchDirectOrInverted(dict1, dict2, word, false);
-    } catch {
-      // Continue until a language pair resolves successfully.
+      const attempt = await fetchLookupAttempt(dict1, dict2, word);
+      if (attempt.classification === "found") {
+        return { ok: true, html: attempt.html, meta: attempt.meta };
+      }
+
+      if (attempt.classification === "not_found" && !firstNotFound) {
+        firstNotFound = attempt;
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        lastUnexpectedError = error;
+      }
     }
+  }
+
+  if (firstNotFound) {
+    return {
+      ok: true,
+      html: firstNotFound.html,
+      meta: firstNotFound.meta,
+    };
+  }
+
+  if (lastUnexpectedError) {
+    throw lastUnexpectedError;
   }
 
   throw new Error(`No result found for ${word}`);

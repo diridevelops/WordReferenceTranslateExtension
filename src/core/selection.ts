@@ -1,4 +1,4 @@
-import type { TranslationResult } from "@/shared/types";
+import type { TranslationFoundResult } from "@/shared/types";
 
 function findSelectedWordFromNode(
   node: Node | null,
@@ -29,7 +29,7 @@ function findSelectedWordFromNode(
 export function resolveInteractiveLookup(
   document: Document,
   target: EventTarget | null,
-  result: TranslationResult,
+  result: TranslationFoundResult,
 ): {
   word: string;
   dict1: typeof result.resolvedDict1;

@@ -1,27 +1,54 @@
 import { resolveInteractiveLookup } from "@/core/selection";
 import { msg } from "@/shared/i18n";
-import type { TranslationMeta, TranslationResult } from "@/shared/types";
-import {
-  buildAudioSourcesFromPaths,
-  extractAudioPathsFromHtml,
-  mergeVerbalFormLists,
-  sanitizeWordReferenceRoot,
-  toAbsoluteWordReferenceUrl,
-} from "@/shared/wordreference-html";
+import type {
+  AudioSource,
+  LanguageCode,
+  TranslationFoundResult,
+  TranslationResult,
+} from "@/shared/types";
 
-function setupAudioWidget(listenWidget: HTMLElement | null, audioPaths: string[]): void {
-  if (!listenWidget || audioPaths.length === 0) {
+function parseFirstElement(
+  document: Document,
+  html: string,
+): HTMLElement | null {
+  if (!html) {
+    return null;
+  }
+
+  const template = document.createElement("template");
+  template.innerHTML = html.trim();
+  return template.content.firstElementChild as HTMLElement | null;
+}
+
+function parseElements(
+  document: Document,
+  html: string,
+): HTMLElement[] {
+  if (!html) {
+    return [];
+  }
+
+  const template = document.createElement("template");
+  template.innerHTML = html.trim();
+  return [...template.content.children] as HTMLElement[];
+}
+
+function setupAudioWidget(
+  listenWidget: HTMLElement | null,
+  audioSources: AudioSource[],
+): void {
+  if (!listenWidget || audioSources.length === 0) {
     return;
   }
 
   const audioFiles = document.createElement("div");
   audioFiles.id = "audio_files";
 
-  audioPaths.forEach((path, index) => {
+  audioSources.forEach((audioSource, index) => {
     const audio = document.createElement("audio");
     audio.id = `aud${index}`;
     const source = document.createElement("source");
-    source.src = toAbsoluteWordReferenceUrl(path);
+    source.src = audioSource.url;
     source.type = "audio/mpeg";
     audio.append(source);
     audioFiles.append(audio);
@@ -41,15 +68,11 @@ function setupAudioWidget(listenWidget: HTMLElement | null, audioPaths: string[]
   const optGroup = document.createElement("optgroup");
   optGroup.label = "Accents";
 
-  audioPaths.forEach((path, index) => {
+  audioSources.forEach((audioSource, index) => {
     const option = document.createElement("option");
-    const absoluteUrl = toAbsoluteWordReferenceUrl(path);
-    const chunks = absoluteUrl.split("/");
-    const label =
-      `${chunks[chunks.length - 3]}-${chunks[chunks.length - 2]}`.toUpperCase();
     option.value = String(index);
-    option.title = label;
-    option.textContent = label;
+    option.title = audioSource.label;
+    option.textContent = audioSource.label;
     optGroup.append(option);
   });
 
@@ -69,33 +92,22 @@ function setupAudioWidget(listenWidget: HTMLElement | null, audioPaths: string[]
   });
 }
 
-function buildLegacyResult(
-  html: string,
-  meta: TranslationMeta,
-): { nodes: Node[]; result: TranslationResult } {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, "text/html");
+function enhanceFoundMarkup(container: HTMLElement, result: TranslationFoundResult): void {
+  const listenWidget = container.querySelector<HTMLElement>("#listen_widget");
+  setupAudioWidget(listenWidget, result.audioSources);
 
-  const centerColumn = doc.querySelector<HTMLElement>("#centercolumn");
-  const article = doc.querySelector<HTMLElement>("#articleWRD");
-  if (!centerColumn || !article) {
-    throw new Error("Unexpected WordReference response format");
-  }
-
-  sanitizeWordReferenceRoot(centerColumn);
-
-  const listenWidget = doc.querySelector<HTMLElement>("#listen_widget");
-  const audioPaths = extractAudioPathsFromHtml(html);
-  setupAudioWidget(listenWidget, audioPaths);
-
-  const tooltips = centerColumn.querySelectorAll<HTMLElement>(".tooltip");
+  const tooltips = container.querySelectorAll<HTMLElement>(".tooltip");
   tooltips.forEach((tooltip) => {
+    if (tooltip.querySelector(".tooltipArrow")) {
+      return;
+    }
+
     const arrow = document.createElement("span");
     arrow.className = "tooltipArrow";
     tooltip.append(arrow);
   });
 
-  const pronWidget = doc.querySelector<HTMLInputElement>("#pronWgt");
+  const pronWidget = container.querySelector<HTMLInputElement>("#pronWgt");
   pronWidget?.addEventListener("change", () => {
     const target = pronWidget
       .closest("#pronunciation_widget")
@@ -104,88 +116,145 @@ function buildLegacyResult(
       target.style.display = pronWidget.checked ? "block" : "none";
     }
   });
+}
 
-  const headword =
-    doc.querySelector(".headerWord")?.textContent?.trim() ?? meta.queriedWord;
-  const pronunciationHtml =
-    doc.querySelector("#pronunciation_widget")?.outerHTML ?? "";
-  const inflectionNodes = mergeVerbalFormLists(
-    doc.querySelector<HTMLElement>("#articleHead"),
-  );
-  const inflectionsHtml = inflectionNodes.map((node) => node.outerHTML).join("");
-  const bodyHtml = article.outerHTML;
-  const linksHtml = doc.querySelector("#WHlinks")?.outerHTML ?? "";
-
-  const header = document.createElement("header");
+function renderFoundResult(
+  container: HTMLElement,
+  result: TranslationFoundResult,
+  handlers: LegacyPopupHandlers,
+): void {
+  const ownerDocument = container.ownerDocument;
+  const header = ownerDocument.createElement("header");
   header.id = "WRText-articleHead";
 
-  const headerWord = document.createElement("div");
+  const headerWord = ownerDocument.createElement("div");
   headerWord.id = "headerWord";
-  headerWord.textContent = headword;
+  headerWord.textContent = result.headword;
   header.append(headerWord);
 
+  const listenWidget = parseFirstElement(ownerDocument, result.listenWidgetHtml);
   if (listenWidget) {
     header.append(listenWidget);
   }
 
-  const sourceButton = document.createElement("div");
+  const sourceButton = ownerDocument.createElement("div");
   sourceButton.className = "WRText-button";
-  sourceButton.innerHTML = `<a id="WRText-sourceLink" href="${meta.sourceUrl}" target="_blank" rel="noopener noreferrer" title="${msg("popSourceBtn", "Open in WordReference.com")}"></a><span class="WRText-buttonLab">${msg("popSourceBtn", "Open in WordReference.com")}</span>`;
+  sourceButton.innerHTML = `<a id="WRText-sourceLink" href="${result.sourceUrl}" target="_blank" rel="noopener noreferrer" title="${msg("popSourceBtn", "Open in WordReference.com")}"></a><span class="WRText-buttonLab">${msg("popSourceBtn", "Open in WordReference.com")}</span>`;
   header.append(sourceButton);
 
-  const linksAnchor = document.createElement("a");
+  const linksAnchor = ownerDocument.createElement("a");
   linksAnchor.id = "WHlink";
   linksAnchor.href = "#WHlinks";
   linksAnchor.textContent = "[links]";
   header.append(linksAnchor);
 
-  const pronunciationWidget = doc.querySelector("#pronunciation_widget");
+  const pronunciationWidget = parseFirstElement(
+    ownerDocument,
+    result.pronunciationHtml,
+  );
   if (pronunciationWidget) {
     header.append(pronunciationWidget);
   }
 
-  inflectionNodes.forEach((node) => header.append(node));
+  parseElements(ownerDocument, result.inflectionsHtml).forEach((node) =>
+    header.append(node),
+  );
 
-  const linksNode = doc.querySelector("#WHlinks");
+  const article = parseFirstElement(ownerDocument, result.bodyHtml);
+  const linksNode = parseFirstElement(ownerDocument, result.linksHtml);
 
-  return {
-    nodes: linksNode ? [header, article, linksNode] : [header, article],
-    result: {
-      ...meta,
-      headword,
-      pronunciationHtml,
-      inflectionsHtml,
-      bodyHtml,
-      linksHtml,
-      audioSources: buildAudioSourcesFromPaths(audioPaths),
-    },
-  };
-}
-
-export interface LegacyPopupHandlers {
-  onLookupWord: (params: {
-    word: string;
-    dict1: TranslationResult["resolvedDict1"];
-    dict2: TranslationResult["resolvedDict2"];
-  }) => void | Promise<void>;
-}
-
-export function renderLegacyPopupResult(
-  container: HTMLElement,
-  html: string,
-  meta: TranslationMeta,
-  handlers: LegacyPopupHandlers,
-): void {
-  const { nodes, result } = buildLegacyResult(html, meta);
   container.innerHTML = "";
-  container.append(...nodes);
+  container.append(header);
+  if (article) {
+    container.append(article);
+  }
+  if (linksNode) {
+    container.append(linksNode);
+  }
 
-  const article = container.querySelector<HTMLElement>("#articleWRD");
-  const ownerDocument = container.ownerDocument;
+  enhanceFoundMarkup(container, result);
+
   article?.addEventListener("click", (event) => {
     const lookup = resolveInteractiveLookup(ownerDocument, event.target, result);
     if (lookup) {
       void handlers.onLookupWord(lookup);
     }
   });
+}
+
+function renderNotFoundResult(
+  container: HTMLElement,
+  result: Extract<TranslationResult, { status: "not_found" }>,
+  handlers: LegacyPopupHandlers,
+): void {
+  const ownerDocument = container.ownerDocument;
+  const card = ownerDocument.createElement("section");
+  card.id = "WRText-notFound";
+
+  const title = ownerDocument.createElement("h2");
+  title.id = "WRText-notFoundTitle";
+  title.textContent =
+    result.message || msg("popNoTranslationTitle", "No translation found");
+  card.append(title);
+
+  if (!result.message) {
+    const message = ownerDocument.createElement("p");
+    message.id = "WRText-notFoundMessage";
+    message.textContent = msg(
+      "popNoTranslationMessage",
+      "Try one of these similar words instead.",
+    );
+    card.append(message);
+  }
+
+  if (result.similarWords.length > 0) {
+    const suggestionsTitle = ownerDocument.createElement("div");
+    suggestionsTitle.id = "WRText-notFoundSuggestionsTitle";
+    suggestionsTitle.textContent = msg("popSimilarWordsLabel", "Similar words");
+    card.append(suggestionsTitle);
+
+    const suggestions = ownerDocument.createElement("div");
+    suggestions.id = "WRText-notFoundSuggestions";
+
+    result.similarWords.forEach((similarWord) => {
+      const button = ownerDocument.createElement("button");
+      button.type = "button";
+      button.className = "WRText-notFoundSuggestion";
+      button.textContent = similarWord.word;
+      button.addEventListener("click", () => {
+        void handlers.onLookupWord({
+          word: similarWord.word,
+          dict1: result.requestedDict1,
+          dict2: result.requestedDict2,
+        });
+      });
+      suggestions.append(button);
+    });
+
+    card.append(suggestions);
+  }
+
+  container.innerHTML = "";
+  container.append(card);
+}
+
+export interface LegacyPopupHandlers {
+  onLookupWord: (params: {
+    word: string;
+    dict1: LanguageCode;
+    dict2: Exclude<LanguageCode, "auto">;
+  }) => void | Promise<void>;
+}
+
+export function renderLegacyPopupResult(
+  container: HTMLElement,
+  result: TranslationResult,
+  handlers: LegacyPopupHandlers,
+): void {
+  if (result.status === "not_found") {
+    renderNotFoundResult(container, result, handlers);
+    return;
+  }
+
+  renderFoundResult(container, result, handlers);
 }

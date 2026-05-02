@@ -83,14 +83,29 @@ export interface AudioSource {
   url: string;
 }
 
-export interface TranslationResult extends TranslationMeta {
+export interface SimilarWord {
+  word: string;
+  normalized: string;
+}
+
+export interface TranslationFoundResult extends TranslationMeta {
+  status: "found";
   headword: string;
+  listenWidgetHtml: string;
   pronunciationHtml: string;
   inflectionsHtml: string;
   bodyHtml: string;
   linksHtml: string;
   audioSources: AudioSource[];
 }
+
+export interface TranslationNotFoundResult extends TranslationMeta {
+  status: "not_found";
+  message: string;
+  similarWords: SimilarWord[];
+}
+
+export type TranslationResult = TranslationFoundResult | TranslationNotFoundResult;
 
 export interface TranslationRequest {
   dict1: LanguageCode;
@@ -149,8 +164,8 @@ export interface InPagePopupLookupMessage {
   type: "WRT_LOOKUP";
   payload: {
     word: string;
-    dict1: TranslationResult["resolvedDict1"];
-    dict2: TranslationResult["resolvedDict2"];
+    dict1: LanguageCode;
+    dict2: Exclude<LanguageCode, "auto">;
   };
 }
 
