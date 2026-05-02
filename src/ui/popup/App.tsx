@@ -113,17 +113,17 @@ export function PopupApp() {
   }, []);
 
   useLayoutEffect(() => {
-    if (!autocompleteItems.length) {
-      if (autocompleteSpacerHeight !== 0) {
-        setAutocompleteSpacerHeight(0);
-      }
-      if (autocompleteMaxHeight !== null) {
-        setAutocompleteMaxHeight(null);
-      }
-      return;
-    }
-
     const frame = requestAnimationFrame(() => {
+      if (!autocompleteItems.length) {
+        if (autocompleteSpacerHeight !== 0) {
+          setAutocompleteSpacerHeight(0);
+        }
+        if (autocompleteMaxHeight !== null) {
+          setAutocompleteMaxHeight(null);
+        }
+        return;
+      }
+
       const root = rootRef.current;
       const autocompleteElement = autocompleteRef.current;
       if (!root || !autocompleteElement) {
