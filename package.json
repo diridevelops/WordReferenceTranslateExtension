@@ -1,5 +1,5 @@
 {
-  "name": "wordreferencetranslatev3",
+  "name": "wordreference-translate-extension",
   "version": "3.0.0",
   "type": "module",
   "private": true,
@@ -28,7 +28,7 @@
     "wordreference"
   ],
   "license": "MIT",
-  "description": "WordReference Translate V3 browser extension built with WXT, TypeScript, and React.",
+  "description": "WordReference Translate browser extension built with WXT, TypeScript, and React.",
   "dependencies": {
     "react": "^19.2.5",
     "react-dom": "^19.2.5"
