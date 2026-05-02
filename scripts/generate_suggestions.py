@@ -16,8 +16,8 @@ except ImportError as exc:  # pragma: no cover - local helper
 
 
 LANGUAGES = ("en", "es", "fr", "it")
-TARGET_SIZE = 20000
-RAW_LIMIT = 50000
+TARGET_SIZE = 50000
+RAW_LIMIT = 120000
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT_DIR = ROOT / "public" / "data" / "suggestions"
 NON_ALPHA_RE = re.compile(r"[^a-z]")
