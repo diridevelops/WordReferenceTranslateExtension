@@ -1,0 +1,40 @@
+@layer tokens {
+  :is(html, .wrt-inline-popup, .wrt-inline-popup__arrow)[data-theme="darkula"] {
+    --color-surface-app: #2b2b2b;
+    --color-surface-panel: #303030;
+    --color-surface-panel-alt: #2b2b2b;
+    --color-surface-control: #313335;
+    --color-surface-control-hover: #2f2f2f;
+    --color-surface-input: #313335;
+    --color-surface-tooltip: rgba(0, 0, 0, 0.8);
+    --color-surface-scrollbar-track: #1b1b1b;
+    --color-surface-changelog: #1b1b1b;
+    --color-border: #393a3c;
+    --color-border-control: #555555;
+    --color-border-input: #555555;
+    --color-text: #b6b6b6;
+    --color-text-muted: gray;
+    --color-text-subtle: #bababa;
+    --color-text-footer: #5a5a5a;
+    --color-text-tooltip: #fff;
+    --color-text-example: gray;
+    --color-text-pronunciation: firebrick;
+    --color-text-placeholder: inherit;
+    --color-link: firebrick;
+    --color-link-visited: #b23d3f;
+    --color-accent: firebrick;
+    --color-accent-hover: firebrick;
+    --color-row-hover: #1a1a1a;
+    --color-icon: #b6b6b6;
+    --color-control-icon: #b6b6b6;
+    --color-loader-track: #b6b6b6;
+    --color-playback-surface: #b6b6b6;
+    --color-playback-text: #1a1a1a;
+    --color-changelog-border: firebrick;
+    --color-changelog-badge-text: #fff;
+    --shadow-input:
+      inset 0 0 5px rgba(0, 0, 0, 0.1),
+      inset 0 0 1px rgba(0, 0, 0, 0.2);
+    --effect-interactive-hover: brightness(0.9);
+  }
+}

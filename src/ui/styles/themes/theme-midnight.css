@@ -1,0 +1,40 @@
+@layer tokens {
+  :is(html, .wrt-inline-popup, .wrt-inline-popup__arrow)[data-theme="midnight"] {
+    --color-surface-app: #000625;
+    --color-surface-panel: #090f2b;
+    --color-surface-panel-alt: #000625;
+    --color-surface-control: #090f2b;
+    --color-surface-control-hover: #090f2b;
+    --color-surface-input: #090f2b;
+    --color-surface-tooltip: rgba(32, 32, 90, 0.8);
+    --color-surface-scrollbar-track: #000417;
+    --color-surface-changelog: #0e1638;
+    --color-border: #171448;
+    --color-border-control: #25234c;
+    --color-border-input: #25234c;
+    --color-text: #696f9e;
+    --color-text-muted: #4f5b7d;
+    --color-text-subtle: #3d4475;
+    --color-text-footer: #5a5a5a;
+    --color-text-tooltip: #9e9fda;
+    --color-text-example: #4f5b7d;
+    --color-text-pronunciation: #495692;
+    --color-text-placeholder: #2b314e;
+    --color-link: #495692;
+    --color-link-visited: #333b63;
+    --color-accent: #101946;
+    --color-accent-hover: #101946;
+    --color-row-hover: #0e1846;
+    --color-icon: #696f9e;
+    --color-control-icon: #696f9e;
+    --color-loader-track: #696f9e;
+    --color-playback-surface: #696f9e;
+    --color-playback-text: #070c23;
+    --color-changelog-border: #495692;
+    --color-changelog-badge-text: #c1d2ff;
+    --shadow-input:
+      inset 0 0 5px rgba(0, 0, 0, 0.1),
+      inset 0 0 1px rgba(0, 0, 0, 0.2);
+    --effect-interactive-hover: brightness(0.9);
+  }
+}

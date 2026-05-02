@@ -1,0 +1,154 @@
+{
+  "extensionName": {
+    "message": "WordReference Translate",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "Usa WordReference dalla finestra dell'estensione o traduci direttamente nelle pagine web.",
+    "description": "Description of the add-on."
+  },
+  "menuItemSelectionLogger": {
+    "message": "Traduci '%s'",
+    "description": "Text of context menu item that logs the selected text when clicked."
+  },
+  "popTitle": {
+    "message": "Popup WordReference",
+    "description": "Tooltip when hovering the browser action button"
+  },
+  "popSearchBox": {
+    "message": "Parola da cercare",
+    "description": "'Word to search' - Placeholder for the input box"
+  },
+  "popOptionBtn": {
+    "message": "Impostazioni",
+    "description": "'Settings' - text for the options button in the popup header"
+  },
+  "popBackBtn": {
+    "message": "Precedente",
+    "description": "'Previous page' - text for the back button in the popup header"
+  },
+  "popSourceBtn": {
+    "message": "Apri in WordReference.com",
+    "description": "'Open in WordReference.com' - title for the link to the original WR page"
+  },
+  "popError": {
+    "message": "Qualcosa \u00e8 andato storto. Contattami riferendomi l'errore qui sotto",
+    "description": "Translation error message"
+  },
+  "optTitle": {
+    "message": "Impostazioni",
+    "description": "'Settings' - Title shown on the browser tab"
+  },
+  "optTranslManagement": {
+    "message": "Traduzione",
+    "description": "'Translation' - fieldset text"
+  },
+  "optDefaultLangLab": {
+    "message": "Usa queste lingue per impostazione predefinita",
+    "description": "'Use this languages as default' - checkbox text"
+  },
+  "optDefaultLangHelp": {
+    "message": "Le lingue nel popup verranno impostate per impostazione predefinita a quelle selezionate qui (puoi anche selezionarne solo una)",
+    "description": "Tooltip text"
+  },
+  "optLastLangLab": {
+    "message": "Ricorda le ultime lingue utilizzate",
+    "description": "'Remember the last languages used' - checkbox text"
+  },
+  "optLastLangHelp": {
+    "message": "Le lingue selezionate nel popup saranno salvate per il prossimo utilizzo",
+    "description": "Tooltip text"
+  },
+  "optInSite": {
+    "message": "Integrazione nei siti",
+    "description": "'In-Site integration' - fieldset text"
+  },
+  "optTranslContextLab": {
+    "message": "Traduci la parola selezionata dal menu di contesto (click destro)",
+    "description": "'Translate the selected word from the context-menu (right-click)' - checkbox text"
+  },
+  "optTranslContextHelp": {
+    "message": "Quando si seleziona una parola in una pagina web e si clicca con il tasto destro, apparir\u00e0 un'opzione per tradurre la parola",
+    "description": "Tooltip text"
+  },
+  "optTranslISPopupLab": {
+    "message": "Tradurre la parola selezionata direttamente nella pagina selezionando la parola mentre il tasto Alt \u00e8 premuto",
+    "description": "'Translate the selected word directly in the page by selecting the word while Alt key is pressed' - checkbox text"
+  },
+  "optTranslISPopupHelp": {
+    "message": "Quando si seleziona una parola in una pagina web mentre si tiene premuto Alt, apparir\u00e0 un popup con la traduzione (Alt pu\u00f2 anche essere usato per selezionare i link senza aprirli)",
+    "description": "Tooltip text"
+  },
+  "optTranslISPopupIconLab": {
+    "message": "Dopo aver selezionato una parola, clicca su un'icona accanto ad essa per tradurla",
+    "description": "'After selecting a word, click an icon next to it to translate it' - checkbox text"
+  },
+  "optTranslISPopupIconHelp": {
+    "message": "Un'icona apparir\u00e0 vicino alla parola selezionata, cliccala per tradurre",
+    "description": "Tooltip text"
+  },
+  "optTranslISPopupCombLab": {
+    "message": "Traduci la parola selezionata direttamente nella pagina premendo questa combinazione (clicca per modificare)",
+    "description": "'Translate the selected word directly in the page by pressing this combination (click to modify)' - checkbox text"
+  },
+  "optTranslISPopupCombHelp": {
+    "message": "Max 3 tasti. Alcune scorciatoie sono riservate dal browser e non possono essere inserite",
+    "description": "Tooltip text"
+  },
+  "translISKeyboardInputText": {
+    "message": "Clicca per modificare",
+    "description": "'Click to modify' - keyboard input text"
+  },
+  "optTranslISPopupErrorLang": {
+    "message": "Nessuna lingua selezionata. Seleziona le lingue nel popup dell'estensione",
+    "description": "'No languages selected. Please select languages in the extension popup.' - Error text"
+  },
+  "optAppearance": {
+    "message": "Aspetto",
+    "description": "'Appearance' - fieldset text"
+  },
+  "optThemeSelLab": {
+    "message": "Cambia il tema dell'estensione",
+    "description": "'Change the theme of the extension' - theme selector text"
+  },
+  "optThemeSelHelp": {
+    "message": "Questo influenzer\u00e0 sia il popup dell'estensione che il popup della traduzione nei siti",
+    "description": "Tooltip text"
+  },
+  "fontSize": {
+    "message": "Scegli la dimensione del carattere nella finestra dell'estensione",
+    "description": "'px. Font size in the extension window' - font size"
+  },
+  "fontSizeHelp": {
+    "message": "Scegli quanto grande sar\u00e0 il testo nel popup dell'estensione",
+    "description": "Tooltip text"
+  },
+  "optTranslationText": {
+    "message": "Se vuoi aiutare a tradurre questa estensione nella tua lingua, oppure se hai problemi o suggerimenti, sentiti libero di contattarmi a",
+    "description": "Collaborate at the translation text"
+  },
+  "optOpenSourceText": {
+    "message": "Questa estensione \u00e8 open source e il codice sorgente \u00e8 disponibile qui:",
+    "description": "Open-source contact text"
+  },
+  "optContacts": {
+    "message": "Contatti",
+    "description": "'Contacts' - fieldset text"
+  },
+  "optContactText": {
+    "message": "Se hai qualche problema o suggerimento, non esitare a contattarmi all'indirizzo",
+    "description": "'If you have any problem or suggestion feel free to write me at' - suggestion text"
+  },
+  "optHelpLinkText": {
+    "message": "pagina di aiuto",
+    "description": "'help page' - help link text"
+  },
+  "optCredits": {
+    "message": "Crediti",
+    "description": "'About the author' - fieldset text"
+  },
+  "optAuthorText": {
+    "message": "Estensione creata da",
+    "description": "'Extension created by' - about author text"
+  }
+}

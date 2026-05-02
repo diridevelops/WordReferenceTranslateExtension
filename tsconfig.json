@@ -1,0 +1,19 @@
+{
+  "extends": "./.wxt/tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "jsx": "react-jsx",
+    "types": ["vitest/globals"]
+  },
+  "include": [
+    "entrypoints",
+    "src",
+    "tests",
+    "wxt.config.ts",
+    "vitest.config.ts"
+  ]
+}

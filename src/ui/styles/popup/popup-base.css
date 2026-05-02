@@ -1,0 +1,744 @@
+@layer reset {
+  html,
+  body,
+  div,
+  span,
+  applet,
+  object,
+  iframe,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  blockquote,
+  pre,
+  a,
+  abbr,
+  acronym,
+  address,
+  big,
+  cite,
+  code,
+  del,
+  dfn,
+  em,
+  font,
+  img,
+  ins,
+  kbd,
+  q,
+  s,
+  samp,
+  small,
+  strike,
+  strong,
+  sub,
+  sup,
+  tt,
+  var,
+  b,
+  u,
+  i,
+  center,
+  dl,
+  dt,
+  dd,
+  ol,
+  ul,
+  li,
+  fieldset,
+  form,
+  label,
+  legend,
+  table,
+  caption,
+  tbody,
+  tfoot,
+  thead,
+  tr,
+  th,
+  td {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+  }
+
+  body {
+    line-height: 1;
+  }
+
+  ol,
+  ul {
+    list-style: none;
+  }
+
+  blockquote,
+  q {
+    quotes: none;
+  }
+
+  :focus {
+    outline: 0;
+  }
+
+  ins {
+    text-decoration: none;
+  }
+
+  del {
+    text-decoration: line-through;
+  }
+
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    width: 524px;
+    max-height: 500px;
+    line-height: normal;
+    overflow: hidden;
+  }
+
+  body {
+    display: flex;
+    flex-flow: column nowrap;
+    font-family:
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      "Roboto",
+      sans-serif;
+    background-color: var(--color-surface-app);
+    color: var(--color-text);
+  }
+
+  select {
+    padding-left: 5px;
+    appearance: none;
+    background: url("/icons/dropdown.svg") no-repeat 95% center;
+  }
+
+  option.disabled {
+    color: #808080;
+  }
+
+  sup {
+    vertical-align: super;
+    font-size: smaller;
+  }
+
+  body,
+  button,
+  input,
+  select,
+  textarea {
+    color: var(--color-text);
+  }
+}
+
+@layer components {
+  .WRTloader {
+    display: inline-block;
+    margin: 5px;
+    width: 30px;
+    height: 30px;
+    border-width: 4px;
+    border-style: solid;
+    border-color: var(--color-loader-track);
+    border-top-color: var(--color-accent);
+    border-radius: 50%;
+    animation: spin 2s linear infinite;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  #WRText-root {
+    display: flex;
+    flex-flow: column nowrap;
+    width: 524px;
+    max-height: 500px;
+  }
+
+  #WRText-header {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 100%;
+    padding: 4px;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface-app);
+    z-index: 999;
+  }
+
+  #WRText-search {
+    font-size: 0;
+  }
+
+  #WRText-searchWrap {
+    display: flex;
+    flex-flow: row nowrap;
+  }
+
+  #WRText-searchBox {
+    width: 100%;
+    height: 30px;
+    padding: 0 10px;
+    font-size: 15px;
+    border: 1px solid var(--color-border-input);
+    border-right-width: 0;
+    border-radius: 3px 0 0 3px;
+    background-color: var(--color-surface-input);
+    box-shadow: var(--shadow-input);
+  }
+
+  #WRText-searchBox::placeholder {
+    color: var(--color-text-placeholder);
+  }
+
+  #WRText-searchBtn {
+    width: 30px;
+    height: 30px;
+    vertical-align: top;
+    border: 1px solid var(--color-accent);
+    border-radius: 0 3px 3px 0;
+    background: var(--color-accent) url("/icons/search.svg") no-repeat center;
+    background-size: 20px;
+    cursor: pointer;
+  }
+
+  #WRText-searchBtn:hover {
+    background-color: var(--color-accent-hover);
+  }
+
+  #WRText-langSel {
+    margin-top: 4px;
+  }
+
+  #WRText-dict1,
+  #WRText-dict2 {
+    width: 110px;
+    height: 25px;
+    border: 1px solid var(--color-border-control);
+    background-color: var(--color-surface-control);
+  }
+
+  #WRText-dict1 {
+    border-radius: 3px 0 0 3px;
+  }
+
+  #WRText-dict2 {
+    border-radius: 0 3px 3px 0;
+  }
+
+  #WRText-LeftBtns,
+  #WRText-RightBtns {
+    display: flex;
+    flex-flow: column nowrap;
+    flex-basis: 16px;
+  }
+
+  .WRText-button {
+    height: 16px;
+    position: relative;
+  }
+
+  .WRText-button a {
+    display: block;
+    width: 16px;
+    height: 16px;
+    font-size: 10px !important;
+    background-color: var(--color-control-icon);
+  }
+
+  .WRText-button:not(:first-child) {
+    margin-top: 2px;
+  }
+
+  .WRText-button:hover {
+    filter: var(--effect-interactive-hover);
+  }
+
+  .WRText-buttonLab {
+    display: none;
+    max-width: 100px;
+    position: absolute;
+    font-size: 10px;
+    color: var(--color-text-subtle);
+  }
+
+  .WRText-button:hover .WRText-buttonLab {
+    display: inline-block;
+  }
+
+  .WRText-button #WRText-options {
+    mask: url(/icons/settings.svg) no-repeat no-clip center;
+    -webkit-mask: url(/icons/settings.svg) content-box no-repeat center;
+    mask-size: contain;
+    -webkit-mask-size: contain;
+  }
+
+  .WRText-button #WRText-options + .WRText-buttonLab {
+    top: 0;
+    right: 20px;
+  }
+
+  .WRText-button #WRText-backBtn {
+    mask: url(/icons/back.svg) no-repeat no-clip center;
+    -webkit-mask: url(/icons/back.svg) content-box no-repeat center;
+    mask-size: 20px;
+    -webkit-mask-size: 20px;
+  }
+
+  .WRText-button #WRText-backBtn + .WRText-buttonLab {
+    top: 0;
+    left: 20px;
+  }
+
+  #WRText-switchBtn {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    vertical-align: bottom;
+    border-width: 1px 0;
+    border-style: solid;
+    border-color: var(--color-border-control);
+    background-color: var(--color-surface-control);
+    cursor: pointer;
+  }
+
+  #WRText-switchBtn:hover {
+    background-color: var(--color-surface-control-hover);
+  }
+
+  #WRText-switchBtn span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-control-icon);
+    mask: url(/icons/switchLang.svg) no-repeat no-clip center;
+    -webkit-mask: url(/icons/switchLang.svg) content-box no-repeat center;
+    mask-size: 18px;
+    -webkit-mask-size: 18px;
+  }
+
+  #WRText-footer {
+    font-size: 14px;
+    color: var(--color-text-footer);
+  }
+
+  #WRText-footer #WRText-changelog {
+    position: relative;
+    margin: 4px;
+    padding: 20px 4px 4px;
+    border: 2px solid var(--color-changelog-border);
+    border-radius: 4px;
+    background-color: var(--color-surface-changelog);
+    color: var(--color-text);
+  }
+
+  #WRText-footer #WRText-changelog #WRText-changelogText {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 10px;
+  }
+
+  #WRText-footer #WRText-changelog #WRText-changelogClose {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 10px;
+    cursor: pointer;
+  }
+
+  #WRText-footer #WRText-changelog #WRText-changelogText,
+  #WRText-footer #WRText-changelog #WRText-changelogClose {
+    background-color: var(--color-changelog-border);
+    color: var(--color-changelog-badge-text);
+  }
+
+  #WRText-footer #WRText-changelog #WRText-changelogList {
+    list-style: disc inside;
+  }
+
+  #WRText-footer #WRText-version {
+    padding-right: 8px;
+    text-align: right;
+    font-size: 10px;
+  }
+
+  #WRText-content {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-bottom-width: 0;
+    border-bottom-style: solid;
+    background-color: var(--color-surface-panel);
+    text-align: center;
+    font-size: 14px;
+    font-family:
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      "Roboto",
+      sans-serif;
+    user-select: text;
+  }
+
+  #WRText-content > * {
+    text-align: left;
+  }
+
+  #WRText-content a {
+    color: var(--color-link);
+    text-decoration: none;
+  }
+
+  #WRText-content a:visited {
+    color: var(--color-link-visited);
+  }
+
+  #WRText-content .POS2 {
+    color: var(--color-link) !important;
+  }
+
+  #WRText-content .tooltip {
+    position: relative;
+  }
+
+  #WRText-content .tooltip > span {
+    display: none;
+    position: absolute;
+    font-style: normal;
+    z-index: 9;
+  }
+
+  #WRText-content .tooltip:hover > span {
+    display: block;
+  }
+
+  #WRText-content .tooltip > span:not(.tooltipArrow) {
+    width: 150px;
+    top: 22px;
+    left: 0;
+    padding: 6px;
+    border-radius: 3px;
+    color: var(--color-text-tooltip);
+    background-color: var(--color-surface-tooltip);
+  }
+
+  #WRText-content .ToWrd .tooltip > span:not(.tooltipArrow) {
+    left: -110px;
+  }
+
+  #WRText-content .tooltip > span.tooltipArrow {
+    width: 0;
+    height: 0;
+    top: 16px;
+    left: 10px;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid var(--color-surface-tooltip);
+  }
+
+  #WRText-content::-webkit-scrollbar {
+    width: 0.8em;
+    background-color: var(--color-surface-scrollbar-track);
+  }
+
+  #WRText-content::-webkit-scrollbar-track {
+    border-left: 1px solid var(--color-border);
+  }
+
+  #WRText-content::-webkit-scrollbar-thumb {
+    border-left: 1px solid var(--color-border);
+    background-color: var(--color-accent);
+  }
+
+  #WRText-content #WRText-articleHead {
+    display: flex;
+    flex-flow: row wrap;
+    padding: 8px;
+  }
+
+  #WRText-content #WRText-articleHead > * {
+    flex: 1 1 auto;
+    align-self: center;
+  }
+
+  #WRText-content #WRText-articleHead #headerWord {
+    font-size: 1.56em;
+    font-weight: bold;
+  }
+
+  #WRText-content #WRText-articleHead #listen_widget {
+    display: flex;
+    height: 1.75em;
+  }
+
+  #WRText-content #WRText-articleHead #listen_widget > span {
+    padding: 4px;
+    font-size: 0.8em;
+  }
+
+  #WRText-content #WRText-articleHead #listen_txt {
+    border: 1px solid var(--color-border-control);
+    border-radius: 3px 0 0 3px;
+    color: var(--color-text-subtle);
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  #WRText-content #WRText-articleHead #listen_txt::before {
+    display: inline-block;
+    width: 1.25em;
+    height: 1.25em;
+    position: relative;
+    top: -1px;
+    margin-right: 3px;
+    vertical-align: middle;
+    content: "";
+    background-color: var(--color-icon);
+    mask: url(/icons/audio.svg) no-repeat no-clip center;
+    -webkit-mask: url(/icons/audio.svg) content-box no-repeat center;
+    mask-size: contain;
+    -webkit-mask-size: contain;
+  }
+
+  #WRText-content #WRText-articleHead #audiodrop {
+    border: solid var(--color-border-control);
+    border-width: 1px 1px 1px 0;
+    border-radius: 0 3px 3px 0;
+  }
+
+  #WRText-content #WRText-articleHead #accentSelection,
+  #WRText-content #WRText-articleHead .tooltip.pronWidget,
+  #WRText-content #WRText-articleHead .more-pron-trigger {
+    color: var(--color-text-subtle);
+  }
+
+  #WRText-content #WRText-articleHead #accentSelection {
+    border: none;
+    font-size: 0.9em;
+    text-transform: uppercase;
+  }
+
+  #WRText-content #WRText-articleHead #accentSelection optgroup,
+  #WRText-content #WRText-articleHead #accentSelection option {
+    background-color: var(--color-surface-app);
+  }
+
+  #WRText-content
+    #WRText-articleHead
+    #accentSelection
+    #playbackSelected {
+    background-color: var(--color-playback-surface);
+    color: var(--color-playback-text);
+  }
+
+  #WRText-content #WRText-articleHead a#WHlink {
+    text-align: right;
+    font-variant: small-caps;
+  }
+
+  #WRText-content #WRText-articleHead #pronunciation_widget {
+    flex: 0 0 100%;
+    margin-top: 4px;
+  }
+
+  #WRText-content #WRText-articleHead .tooltip.pronWidget {
+    font-size: 0.875em;
+  }
+
+  #WRText-content #WRText-articleHead .pronWR,
+  #WRText-content #WRText-articleHead .pronRH {
+    margin-left: 6px;
+    color: var(--color-text-pronunciation) !important;
+    font-size: 1em !important;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  #WRText-content #WRText-articleHead .more-pron-state,
+  #WRText-content #WRText-articleHead .more-pron-target {
+    display: none;
+  }
+
+  #WRText-content #WRText-articleHead .more-pron-wrap > p.pr {
+    display: inline;
+  }
+
+  #WRText-content #WRText-articleHead .more-pron-trigger {
+    display: inline-block;
+    padding: 0 0.5em;
+    cursor: pointer;
+  }
+
+  #WRText-content #WRText-articleHead .more-pron-trigger::before {
+    content: "[ \25be more ]";
+  }
+
+  #WRText-content
+    #WRText-articleHead
+    .more-pron-state:checked
+    ~ .more-pron-wrap
+    .more-pron-trigger::before {
+    content: "[ \25b4 less ]";
+  }
+
+  #WRText-content #WRText-articleHead dl.ListInfl {
+    display: flex;
+    flex-flow: row nowrap;
+  }
+
+  #WRText-content #WRText-articleHead dd {
+    margin-inline-start: 40px;
+  }
+
+  #WRText-content #WRText-articleHead dd.ListInfl {
+    margin-left: 5px;
+  }
+
+  #WRText-content table.WRD {
+    width: 100%;
+    border-collapse: collapse;
+    border-top: solid 1px var(--color-border);
+    border-bottom: solid 1px var(--color-border);
+    cursor: pointer;
+  }
+
+  #WRText-content table.WRD .additional {
+    border-top: solid 1px var(--color-border);
+  }
+
+  #WRText-content tr.wrtopsection td {
+    padding: 12px 0;
+    font-size: 1em;
+    text-align: center;
+  }
+
+  #WRText-content :not(.even) + .even,
+  #WRText-content :not(.odd) + .odd {
+    border-top: 1px solid var(--color-border);
+  }
+
+  #WRText-content .WRD tr td:nth-child(1):not(.FrEx):not(.ToEx) {
+    width: 24%;
+  }
+
+  #WRText-content .WRD tr td:nth-child(2):not(.FrEx):not(.ToEx) {
+    width: 40%;
+  }
+
+  #WRText-content .WRD tr td:nth-child(3):not(.FrEx):not(.ToEx) {
+    width: 36%;
+  }
+
+  #WRText-content .WRD td {
+    padding: 2px;
+  }
+
+  #WRText-content .WRD td.FrWrd {
+    padding-left: 8px;
+  }
+
+  #WRText-content .WRD td.ToWrd {
+    padding-left: 5px;
+    padding-right: 8px;
+  }
+
+  #WRText-content .langHeader {
+    font-size: 0.813em !important;
+  }
+
+  #WRText-content .langHeader td {
+    padding-bottom: 4px;
+  }
+
+  #WRText-content .engusg {
+    display: inline-block;
+    width: 1.5em;
+    height: 1.5em;
+    margin-right: 4px;
+    vertical-align: middle;
+    background-color: var(--color-icon);
+    mask: url(/icons/engusg.svg) no-repeat no-clip center;
+    -webkit-mask: url(/icons/engusg.svg) content-box no-repeat center;
+    mask-size: contain;
+    -webkit-mask-size: contain;
+  }
+
+  #WRText-content .dsense {
+    float: right;
+  }
+
+  #WRText-content .WRreporterror {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  #WRText-content #article a,
+  #WRText-content #articleWRD a,
+  #WRText-content #articleHead a {
+    font-size: 0.813em;
+  }
+
+  #WRText-content #WHlinks {
+    padding-left: 8px;
+    padding-bottom: 8px;
+    border-top: solid 1px var(--color-border);
+  }
+
+  #WRText-content .even {
+    background-color: var(--color-surface-panel-alt);
+  }
+
+  #WRText-content tr.even:hover,
+  #WRText-content tr.odd:hover,
+  #WRText-content tr.evenEx:hover,
+  #WRText-content tr.oddEx:hover {
+    background-color: var(--color-row-hover);
+  }
+
+  #WRText-content td.ToEx,
+  #WRText-content td.FrEx {
+    color: var(--color-text-example);
+  }
+
+  #WRText-sourceLink {
+    mask: url(/icons/open-in-browser.svg) no-repeat no-clip center;
+    -webkit-mask: url(/icons/open-in-browser.svg) content-box no-repeat center;
+    mask-size: 20px;
+    -webkit-mask-size: 20px;
+  }
+}

@@ -1,0 +1,150 @@
+{
+    "extensionName": {
+        "message": "WordReference Translate",
+        "description": "Name of the extension."
+    },
+    "extensionDescription": {
+        "message": "Utilisez WordReference depuis la fen\u00eatre de l'extension ou traduisez directement sur les pages web.",
+        "description": "Description of the add-on."
+    },
+    "menuItemSelectionLogger": {
+        "message": "Traduire '%s'",
+        "description": "Text of context menu item that logs the selected text when clicked."
+    },
+    "popSearchBox": {
+        "message": "Mot \u00e0 rechercher",
+        "description": "'Word to search' - Placeholder for the input box"
+    },
+    "popOptionBtn": {
+        "message": "Param\u00e8tres",
+        "description": "'Settings' - text for the options button in the popup header"
+    },
+    "popBackBtn": {
+        "message": "Pr\u00e9c\u00e9dent",
+        "description": "'Previous page' - text for the back button in the popup header"
+    },
+    "popSourceBtn": {
+        "message": "Ouvrir sur WordReference.com",
+        "description": "'Open in WordReference.com' - title for the link to the original WR page"
+    },
+    "popError": {
+        "message": "Une erreur s'est produite. Contactez-moi en indiquant l'erreur ci-dessous",
+        "description": "Translation error message"
+    },
+    "optTitle": {
+        "message": "Param\u00e8tres",
+        "description": "'Settings' - Title shown on the browser tab"
+    },
+    "optTranslManagement": {
+        "message": "Tradution",
+        "description": "'Translation' - fieldset text"
+    },
+    "optDefaultLangLab": {
+        "message": "Utiliser cette langue par d\u00e9faut",
+        "description": "'Use this languages as default' - checkbox text"
+    },
+    "optDefaultLangHelp": {
+        "message": "Le choix de langues sera appliqu\u00e9 par d\u00e9faut dans la fen\u00eatre contextuelle (vous pouvez en choisir une seule ou plusieurs)",
+        "description": "Tooltip text"
+    },
+    "optLastLangLab": {
+        "message": "Se souvenir des derni\u00e8res langues utilis\u00e9es",
+        "description": "'Remember the last languages used' - checkbox text"
+    },
+    "optLastLangHelp": {
+        "message": "Les langues s\u00e9lectionn\u00e9es dans la fen\u00eatre popup seront m\u00e9moris\u00e9es pour la prochaine fois",
+        "description": "Tooltip text"
+    },
+    "optInSite": {
+        "message": "Int\u00e9gration dans le site",
+        "description": "'In-Site integration' - fieldset text"
+    },
+    "optTranslContextLab": {
+        "message": "Traduit le mot s\u00e9lectionn\u00e9 depuis le menu contextuel (clic droit)",
+        "description": "'Translate the selected word from the context-menu (right-click)' - checkbox text"
+    },
+    "optTranslContextHelp": {
+        "message": "Lorsque vous s\u00e9lectionnez un mot sur une page et cliquez \u00e0 l'aide du bouton droit, une option pour traduire le mot sera disponible",
+        "description": "Tooltip text"
+    },
+    "optTranslISPopupLab": {
+        "message": "Traduit directement le mot s\u00e9lectionn\u00e9 en maintenant la touche Alt",
+        "description": "'Translate the selected word directly in the page by selecting the word while Alt key is pressed' - checkbox text"
+    },
+    "optTranslISPopupHelp": {
+        "message": "Lorsque un mot est s\u00e9lectionn\u00e9 avec la touche Alt appuy\u00e9e, une fen\u00eatre avec la traduction appara\u00eetra (la touche Alt peut \u00eatre aussi utilis\u00e9e pour s\u00e9lectionner des liens sans les ouvrir)",
+        "description": "Tooltip text"
+    },
+    "optTranslISPopupIconLab": {
+        "message": "Apr\u00e8s avoir s\u00e9lectionn\u00e9 un mot, cliquez sur l'ic\u00f4ne \u00e0 proximit\u00e9 pour le traduire",
+        "description": "'After selecting a word, click an icon next to it to translate it' - checkbox text"
+    },
+    "optTranslISPopupIconHelp": {
+        "message": "Une ic\u00f4ne appara\u00eetra \u00e0 proximit\u00e9 du mot s\u00e9lectionn\u00e9, cliquez dessus pour le traduire",
+        "description": "Tooltip text"
+    },
+    "optTranslISPopupCombLab": {
+        "message": "Traduit le mot s\u00e9lectionn\u00e9 directement dans la page \u00e0 l'aide de cette combinaison de touches (cliquez pour modifier)",
+        "description": "'Translate the selected word directly in the page by pressing this combination (click to modify)' - checkbox text"
+    },
+    "optTranslISPopupCombHelp": {
+        "message": "Maximum 3 touches. Certaines combinaisons sont r\u00e9serv\u00e9es par le navigateur et ne peuvent \u00eatre utilis\u00e9es",
+        "description": "Tooltip text"
+    },
+    "translISKeyboardInputText": {
+        "message": "Cliquez pour modifier",
+        "description": "'Click to modify' - keyboard input text"
+    },
+    "optTranslISPopupErrorLang": {
+        "message": "Pas de langue s\u00e9lectionn\u00e9e. Veuillez s\u00e9lectionner des langues dans la fen\u00eatre de l'extension",
+        "description": "'No languages selected. Please select languages in the extension popup.' - Error text"
+    },
+    "optAppearance": {
+        "message": "Apparence",
+        "description": "'Appearance' - fieldset text"
+    },
+    "optThemeSelLab": {
+        "message": "Changer le th\u00e8me de l'extension",
+        "description": "'Change the theme of the extension' - theme selector text"
+    },
+    "optThemeSelHelp": {
+        "message": "Ceci modifiera la fen\u00eatre de l'extension et le popup de traduction imbriqu\u00e9",
+        "description": "Tooltip text"
+    },
+    "fontSize": {
+        "message": "Choisir la taille de la police dans la fen\u00eatre de l'extension",
+        "description": "'px. Font size in the extension window' - font size"
+    },
+    "fontSizeHelp": {
+        "message": "Choisir la taille du texte dans la fen\u00eatre de l'extension",
+        "description": "Tooltip text"
+    },
+    "optTranslationText": {
+        "message": "Si vous souhaitez aider \u00e0 traduire cette extension dans votre langue, ou si vous avez un probl\u00e8me ou une suggestion, n'h\u00e9sitez pas \u00e0 me contacter \u00e0",
+        "description": "Collaborate at the translation text"
+    },
+    "optOpenSourceText": {
+        "message": "Cette extension est open source et le code source est disponible ici :",
+        "description": "Open-source contact text"
+    },
+    "optContacts": {
+        "message": "Contacts",
+        "description": "'Contacts' - fieldset text"
+    },
+    "optContactText": {
+        "message": "Si vous rencontrez un probl\u00e8me, ou pour toute suggestion, n'h\u00e9sitez pas \u00e0 me contacter \u00e0",
+        "description": "'If you have any problem or suggestion feel free to write me at' - suggestion text"
+    },
+    "optHelpLinkText": {
+        "message": "page d'aide",
+        "description": "'help page' - help link text"
+    },
+    "optCredits": {
+        "message": "Cr\u00e9dits",
+        "description": "'About the author' - fieldset text"
+    },
+    "optAuthorText": {
+        "message": "Extension cr\u00e9\u00e9e par",
+        "description": "'Extension created by' - about author text"
+    }
+}

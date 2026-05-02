@@ -1,0 +1,88 @@
+@layer theme-overrides {
+  html,
+  body {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: none !important;
+    overflow: hidden !important;
+  }
+
+  body {
+    display: block !important;
+    background: transparent !important;
+  }
+
+  #WRText-content {
+    width: 100% !important;
+    height: 100% !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    line-height: 1.18;
+  }
+
+  #WRText-content #WRText-articleHead {
+    padding: 6px 8px 5px;
+  }
+
+  #WRText-content #WRText-articleHead #headerWord {
+    font-size: 1.42em;
+  }
+
+  #WRText-content #WRText-articleHead #listen_widget {
+    height: 1.55em;
+  }
+
+  #WRText-content #WRText-articleHead #listen_widget > span {
+    padding: 2px 4px;
+    font-size: 0.74em;
+  }
+
+  #WRText-content #WRText-articleHead #pronunciation_widget {
+    margin-top: 2px;
+  }
+
+  #WRText-content .langHeader td {
+    padding-bottom: 2px;
+  }
+
+  #WRText-content .WRD td {
+    padding: 1px 2px;
+  }
+
+  #WRText-content .WRD td.FrWrd {
+    padding-left: 8px;
+  }
+
+  #WRText-content .WRD td.ToWrd {
+    padding-left: 4px;
+    padding-right: 8px;
+  }
+
+  #WRText-content table.WRD {
+    table-layout: fixed;
+  }
+
+  #WRText-content .WRD td,
+  #WRText-content .WRD td.FrWrd,
+  #WRText-content .WRD td.ToWrd,
+  #WRText-content td.FrEx,
+  #WRText-content td.ToEx,
+  #WRText-content #WHlinks,
+  #WRText-content #WHlinks a {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  #WRText-content tr.wrtopsection td {
+    padding: 8px 0 7px;
+  }
+
+  #WRText-content td.FrEx,
+  #WRText-content td.ToEx {
+    line-height: 1.22;
+  }
+
+  #WRText-content .tooltip > span:not(.tooltipArrow) {
+    top: 18px;
+  }
+}
