@@ -51,20 +51,20 @@ export interface SearchHistoryEntry {
   word: string;
 }
 
-export type SuggestionLanguage = Extract<LanguageCode, "en" | "es" | "fr" | "it">;
+export type AutocompleteLanguage = Extract<LanguageCode, "en" | "es" | "fr" | "it">;
 
-export type SuggestionDatasetEntry = [display: string, normalized: string, rank: number];
+export type AutocompleteDatasetEntry = [display: string, normalized: string, rank: number];
 
-export interface SuggestionDataset {
-  language: SuggestionLanguage;
-  entries: SuggestionDatasetEntry[];
+export interface AutocompleteDataset {
+  language: AutocompleteLanguage;
+  entries: AutocompleteDatasetEntry[];
   index: Record<string, [start: number, end: number]>;
 }
 
-export interface SuggestionResult {
+export interface AutocompleteResult {
   display: string;
   normalized: string;
-  language: SuggestionLanguage;
+  language: AutocompleteLanguage;
   tag: string;
   rank: number;
 }

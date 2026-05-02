@@ -8,14 +8,14 @@ import {
   useState,
 } from "react";
 import { CHANGELOG_ITEMS, EXTENSION_VERSION, LANGUAGE_LABELS } from "@/shared/constants";
+import { getPopupAutocomplete } from "@/shared/autocomplete";
 import { msg } from "@/shared/i18n";
 import { sendRuntimeMessage } from "@/shared/messages";
 import { renderLegacyPopupResult } from "@/shared/render-legacy-popup";
-import { getPopupSuggestions } from "@/shared/suggestions";
 import { getSettings, getUiState, updateSettings, updateUiState } from "@/shared/storage";
 import type {
+  AutocompleteResult,
   SearchHistoryEntry,
-  SuggestionResult,
   TranslationMessageResponse,
 } from "@/shared/types";
 
@@ -23,7 +23,7 @@ export function PopupApp() {
   const rootRef = useRef<HTMLElement | null>(null);
   const contentRef = useRef<HTMLElement | null>(null);
   const searchRegionRef = useRef<HTMLDivElement | null>(null);
-  const suggestionsRef = useRef<HTMLDivElement | null>(null);
+  const autocompleteRef = useRef<HTMLDivElement | null>(null);
   const [settings, setSettings] = useState<Awaited<ReturnType<typeof getSettings>> | null>(null);
   const [query, setQuery] = useState("");
   const [dict1, setDict1] = useState<Awaited<ReturnType<typeof getSettings>>["dict1"]>(null);
@@ -33,10 +33,10 @@ export function PopupApp() {
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState<SearchHistoryEntry[]>([]);
   const [showChangelog, setShowChangelog] = useState(false);
-  const [suggestions, setSuggestions] = useState<SuggestionResult[]>([]);
-  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
-  const [suggestionSpacerHeight, setSuggestionSpacerHeight] = useState(0);
-  const [suggestionMaxHeight, setSuggestionMaxHeight] = useState<number | null>(null);
+  const [autocompleteItems, setAutocompleteItems] = useState<AutocompleteResult[]>([]);
+  const [activeAutocompleteIndex, setActiveAutocompleteIndex] = useState(-1);
+  const [autocompleteSpacerHeight, setAutocompleteSpacerHeight] = useState(0);
+  const [autocompleteMaxHeight, setAutocompleteMaxHeight] = useState<number | null>(null);
 
   const handleLookupWord = useEffectEvent(
     async (lookup: {
@@ -76,7 +76,7 @@ export function PopupApp() {
     let cancelled = false;
 
     void (async () => {
-      const nextSuggestions = await getPopupSuggestions({
+      const nextAutocompleteItems = await getPopupAutocomplete({
         query,
         dict1,
         dict2,
@@ -85,8 +85,8 @@ export function PopupApp() {
         return;
       }
 
-      setSuggestions(nextSuggestions);
-      setActiveSuggestionIndex(-1);
+      setAutocompleteItems(nextAutocompleteItems);
+      setActiveAutocompleteIndex(-1);
     })();
 
     return () => {
@@ -101,8 +101,8 @@ export function PopupApp() {
         event.target instanceof Node &&
         !searchRegionRef.current.contains(event.target)
       ) {
-        setSuggestions([]);
-        setActiveSuggestionIndex(-1);
+        setAutocompleteItems([]);
+        setActiveAutocompleteIndex(-1);
       }
     };
 
@@ -113,63 +113,66 @@ export function PopupApp() {
   }, []);
 
   useLayoutEffect(() => {
-    if (!suggestions.length) {
-      if (suggestionSpacerHeight !== 0) {
-        setSuggestionSpacerHeight(0);
+    if (!autocompleteItems.length) {
+      if (autocompleteSpacerHeight !== 0) {
+        setAutocompleteSpacerHeight(0);
       }
-      if (suggestionMaxHeight !== null) {
-        setSuggestionMaxHeight(null);
+      if (autocompleteMaxHeight !== null) {
+        setAutocompleteMaxHeight(null);
       }
       return;
     }
 
     const frame = requestAnimationFrame(() => {
       const root = rootRef.current;
-      const suggestionsElement = suggestionsRef.current;
-      if (!root || !suggestionsElement) {
+      const autocompleteElement = autocompleteRef.current;
+      if (!root || !autocompleteElement) {
         return;
       }
 
       const rootRect = root.getBoundingClientRect();
-      const suggestionsRect = suggestionsElement.getBoundingClientRect();
+      const autocompleteRect = autocompleteElement.getBoundingClientRect();
       const baselineRootHeight = Math.max(
         0,
-        Math.ceil(rootRect.height - suggestionSpacerHeight),
+        Math.ceil(rootRect.height - autocompleteSpacerHeight),
       );
-      const baselineRootBottom = rootRect.bottom - suggestionSpacerHeight;
+      const baselineRootBottom = rootRect.bottom - autocompleteSpacerHeight;
       const availableExpansion = Math.max(0, 500 - baselineRootHeight);
       const overflow = Math.max(
         0,
-        Math.ceil(suggestionsRect.bottom - baselineRootBottom + 4),
+        Math.ceil(autocompleteRect.bottom - baselineRootBottom + 4),
       );
-      const nextSpacerHeight = Math.min(overflow, availableExpansion);
-      const remainingOverflow = overflow - nextSpacerHeight;
-      const maxVisibleSuggestionsHeight = Math.max(
+      const nextAutocompleteSpacerHeight = Math.min(overflow, availableExpansion);
+      const remainingOverflow = overflow - nextAutocompleteSpacerHeight;
+      const maxVisibleAutocompleteHeight = Math.max(
         120,
         Math.floor(
           baselineRootBottom +
             availableExpansion -
-            suggestionsRect.top -
+            autocompleteRect.top -
             4,
         ),
       );
-      const nextMaxHeight =
+      const nextAutocompleteMaxHeight =
         remainingOverflow > 0
-          ? Math.min(suggestionsElement.scrollHeight, maxVisibleSuggestionsHeight)
+          ? Math.min(
+              autocompleteElement.scrollHeight,
+              maxVisibleAutocompleteHeight,
+            )
           : null;
 
-      if (nextSpacerHeight !== suggestionSpacerHeight) {
-        setSuggestionSpacerHeight(nextSpacerHeight);
+      if (nextAutocompleteSpacerHeight !== autocompleteSpacerHeight) {
+        setAutocompleteSpacerHeight(nextAutocompleteSpacerHeight);
       }
-      if (nextMaxHeight !== suggestionMaxHeight) {
-        setSuggestionMaxHeight(nextMaxHeight);
+      if (nextAutocompleteMaxHeight !== autocompleteMaxHeight) {
+        setAutocompleteMaxHeight(nextAutocompleteMaxHeight);
       }
     });
 
     return () => {
       cancelAnimationFrame(frame);
     };
-  }, [suggestions, suggestionSpacerHeight, suggestionMaxHeight]);
+  }, [autocompleteItems, autocompleteSpacerHeight, autocompleteMaxHeight]);
 
   useEffect(() => {
     if (!contentRef.current) {
@@ -192,7 +195,7 @@ export function PopupApp() {
   }, [currentResponse]);
 
   const canSearch = useMemo(() => Boolean(query.trim() && dict1 && dict2), [query, dict1, dict2]);
-  const hasSuggestions = suggestions.length > 0;
+  const hasAutocomplete = autocompleteItems.length > 0;
 
   async function persistLanguageChoice(nextDict1: typeof dict1, nextDict2: typeof dict2): Promise<void> {
     if (!settings || settings.defaultLang || !settings.lastLang) {
@@ -217,8 +220,8 @@ export function PopupApp() {
 
     setLoading(true);
     setError("");
-    setSuggestions([]);
-    setActiveSuggestionIndex(-1);
+    setAutocompleteItems([]);
+    setActiveAutocompleteIndex(-1);
     if (contentRef.current) {
       contentRef.current.innerHTML = '<div class="WRTloader"></div>';
     }
@@ -242,9 +245,11 @@ export function PopupApp() {
     });
   }
 
-  async function selectSuggestion(suggestion: SuggestionResult): Promise<void> {
-    setQuery(suggestion.display);
-    await runSearch(suggestion.display.trim());
+  async function selectAutocompleteItem(
+    autocompleteItem: AutocompleteResult,
+  ): Promise<void> {
+    setQuery(autocompleteItem.display);
+    await runSearch(autocompleteItem.display.trim());
   }
 
   async function handleSourceChange(nextValue: string): Promise<void> {
@@ -327,34 +332,35 @@ export function PopupApp() {
               maxLength={200}
               onChange={(event) => setQuery(event.target.value)}
               onKeyDown={(event) => {
-                if (event.key === "ArrowDown" && hasSuggestions) {
+                if (event.key === "ArrowDown" && hasAutocomplete) {
                   event.preventDefault();
-                  setActiveSuggestionIndex((current) =>
-                    current >= suggestions.length - 1 ? 0 : current + 1,
+                  setActiveAutocompleteIndex((current) =>
+                    current >= autocompleteItems.length - 1 ? 0 : current + 1,
                   );
                   return;
                 }
 
-                if (event.key === "ArrowUp" && hasSuggestions) {
+                if (event.key === "ArrowUp" && hasAutocomplete) {
                   event.preventDefault();
-                  setActiveSuggestionIndex((current) =>
-                    current <= 0 ? suggestions.length - 1 : current - 1,
+                  setActiveAutocompleteIndex((current) =>
+                    current <= 0 ? autocompleteItems.length - 1 : current - 1,
                   );
                   return;
                 }
 
                 if (
                   event.key === "Enter" &&
-                  activeSuggestionIndex >= 0 &&
-                  activeSuggestionIndex < suggestions.length
+                  activeAutocompleteIndex >= 0 &&
+                  activeAutocompleteIndex < autocompleteItems.length
                 ) {
-                  const activeSuggestion = suggestions[activeSuggestionIndex];
-                  if (!activeSuggestion) {
+                  const activeAutocompleteItem =
+                    autocompleteItems[activeAutocompleteIndex];
+                  if (!activeAutocompleteItem) {
                     return;
                   }
 
                   event.preventDefault();
-                  void selectSuggestion(activeSuggestion);
+                  void selectAutocompleteItem(activeAutocompleteItem);
                   return;
                 }
 
@@ -370,35 +376,35 @@ export function PopupApp() {
               disabled={!canSearch || loading}
               onClick={() => void runSearch(query.trim())}
             />
-            {hasSuggestions ? (
+            {hasAutocomplete ? (
               <div
-                id="WRText-suggestions"
+                id="WRText-autocomplete"
                 ref={(node) => {
-                  suggestionsRef.current = node;
+                  autocompleteRef.current = node;
                 }}
                 role="listbox"
                 style={{
-                  maxHeight: suggestionMaxHeight
-                    ? `${suggestionMaxHeight}px`
+                  maxHeight: autocompleteMaxHeight
+                    ? `${autocompleteMaxHeight}px`
                     : undefined,
                 }}
               >
-                {suggestions.map((suggestion, index) => (
+                {autocompleteItems.map((autocompleteItem, index) => (
                   <button
-                    key={`${suggestion.language}-${suggestion.display}-${index}`}
+                    key={`${autocompleteItem.language}-${autocompleteItem.display}-${index}`}
                     type="button"
-                    className={`WRText-suggestion${index === activeSuggestionIndex ? " is-active" : ""}`}
+                    className={`WRText-autocomplete${index === activeAutocompleteIndex ? " is-active" : ""}`}
                     role="option"
-                    aria-selected={index === activeSuggestionIndex}
-                    onMouseEnter={() => setActiveSuggestionIndex(index)}
+                    aria-selected={index === activeAutocompleteIndex}
+                    onMouseEnter={() => setActiveAutocompleteIndex(index)}
                     onMouseDown={(event) => event.preventDefault()}
-                    onClick={() => void selectSuggestion(suggestion)}
+                    onClick={() => void selectAutocompleteItem(autocompleteItem)}
                   >
-                    <span className="WRText-suggestion__tag">
-                      {suggestion.tag}
+                    <span className="WRText-autocomplete__tag">
+                      {autocompleteItem.tag}
                     </span>
-                    <span className="WRText-suggestion__label">
-                      {suggestion.display}
+                    <span className="WRText-autocomplete__label">
+                      {autocompleteItem.display}
                     </span>
                   </button>
                 ))}
@@ -462,11 +468,11 @@ export function PopupApp() {
         {!currentResponse && !error ? null : null}
       </section>
 
-      {hasSuggestions && suggestionSpacerHeight > 0 ? (
+      {hasAutocomplete && autocompleteSpacerHeight > 0 ? (
         <div
-          id="WRText-suggestionSpacer"
+          id="WRText-autocompleteSpacer"
           aria-hidden="true"
-          style={{ height: `${suggestionSpacerHeight}px` }}
+          style={{ height: `${autocompleteSpacerHeight}px` }}
         />
       ) : null}
 

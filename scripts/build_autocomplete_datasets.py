@@ -9,7 +9,7 @@ try:
     from wordfreq import top_n_list
 except ImportError as exc:  # pragma: no cover - local helper
     raise SystemExit(
-        "wordfreq is required to generate suggestion datasets.\n"
+        "wordfreq is required to generate autocomplete datasets.\n"
         "Install it locally first, for example:\n"
         "  python -m pip install wordfreq"
     ) from exc
@@ -19,7 +19,7 @@ LANGUAGES = ("en", "es", "fr", "it")
 TARGET_SIZE = 50000
 RAW_LIMIT = 120000
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT_DIR = ROOT / "public" / "data" / "suggestions"
+OUTPUT_DIR = ROOT / "public" / "data" / "autocomplete_datasets"
 NON_ALPHA_RE = re.compile(r"[^a-z]")
 
 

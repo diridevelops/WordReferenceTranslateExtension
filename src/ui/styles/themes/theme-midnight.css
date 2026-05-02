@@ -9,9 +9,9 @@
     --color-surface-tooltip: rgba(32, 32, 90, 0.8);
     --color-surface-scrollbar-track: #000417;
     --color-surface-changelog: #0e1638;
-    --color-surface-suggestion: #0d1533;
-    --color-surface-suggestion-hover: #14204b;
-    --color-surface-suggestion-tag: #1d2957;
+    --color-surface-autocomplete: #0d1533;
+    --color-surface-autocomplete-hover: #14204b;
+    --color-surface-autocomplete-tag: #1d2957;
     --color-border: #171448;
     --color-border-control: #25234c;
     --color-border-input: #25234c;
@@ -23,7 +23,7 @@
     --color-text-example: #4f5b7d;
     --color-text-pronunciation: #495692;
     --color-text-placeholder: #2b314e;
-    --color-text-suggestion-tag: #c1d2ff;
+    --color-text-autocomplete-tag: #c1d2ff;
     --color-link: #495692;
     --color-link-visited: #333b63;
     --color-accent: #101946;

@@ -236,21 +236,21 @@
     background-color: var(--color-accent-hover);
   }
 
-  #WRText-suggestions {
+  #WRText-autocomplete {
     position: absolute;
     top: calc(100% + 2px);
     left: 0;
     width: 100%;
     border: 1px solid var(--color-border);
     border-radius: 3px;
-    background-color: var(--color-surface-suggestion);
+    background-color: var(--color-surface-autocomplete);
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
     overflow-x: hidden;
     overflow-y: auto;
     z-index: 1002;
   }
 
-  .WRText-suggestion {
+  .WRText-autocomplete {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -259,35 +259,35 @@
     padding: 4px 8px;
     border: 0;
     border-top: 1px solid var(--color-border);
-    background: var(--color-surface-suggestion);
+    background: var(--color-surface-autocomplete);
     color: var(--color-text);
     cursor: pointer;
     font-size: 14px;
     text-align: left;
   }
 
-  .WRText-suggestion:first-child {
+  .WRText-autocomplete:first-child {
     border-top: 0;
   }
 
-  .WRText-suggestion.is-active,
-  .WRText-suggestion:hover {
-    background-color: var(--color-surface-suggestion-hover);
+  .WRText-autocomplete.is-active,
+  .WRText-autocomplete:hover {
+    background-color: var(--color-surface-autocomplete-hover);
   }
 
-  .WRText-suggestion__tag {
+  .WRText-autocomplete__tag {
     min-width: 24px;
     padding: 1px 4px;
     border-radius: 2px;
-    background: var(--color-surface-suggestion-tag);
-    color: var(--color-text-suggestion-tag);
+    background: var(--color-surface-autocomplete-tag);
+    color: var(--color-text-autocomplete-tag);
     font-size: 11px;
     font-weight: 700;
     line-height: 1.2;
     text-align: center;
   }
 
-  .WRText-suggestion__label {
+  .WRText-autocomplete__label {
     flex: 1 1 auto;
     min-width: 0;
     overflow: hidden;
@@ -295,7 +295,7 @@
     white-space: nowrap;
   }
 
-  #WRText-suggestionSpacer {
+  #WRText-autocompleteSpacer {
     flex: 0 0 auto;
   }
 

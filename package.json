@@ -13,7 +13,7 @@
     "zip": "wxt zip -b edge",
     "zip:chrome": "wxt zip -b chrome",
     "zip:firefox": "wxt zip -b firefox --mv3",
-    "build:suggestions": "python scripts/generate_suggestions.py",
+    "build:autocomplete-datasets": "python scripts/build_autocomplete_datasets.py",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "vitest run --coverage",

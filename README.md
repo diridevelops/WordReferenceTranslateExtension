@@ -9,7 +9,7 @@ WordReference Translate is a Manifest V3 browser extension for Edge, Chrome, and
 - Auto-detect source language and inverted-language fallback when the direct lookup has no result.
 - Local-only settings and UI state, including changelog visibility and optional page-integration permissions.
 - Localized UI for `en`, `es`, `fr`, and `it`.
-- Fully local popup search suggestions for `en`, `es`, `fr`, and `it`.
+- Fully local popup autocomplete for `en`, `es`, `fr`, and `it`.
 
 ## Tech stack
 
@@ -50,7 +50,7 @@ All local-only metadata lives in `.env`. Keep `.env` untracked and commit only `
 - `npm run zip`: Edge zip package
 - `npm run zip:chrome`: Chrome zip package
 - `npm run zip:firefox`: Firefox MV3 zip package
-- `npm run build:suggestions`: regenerate the bundled local popup suggestion datasets from `wordfreq`
+- `npm run build:autocomplete-datasets`: regenerate the bundled local popup autocomplete datasets from `wordfreq`
 - `npm run lint`: run ESLint
 - `npm run lint:fix`: apply safe ESLint fixes
 - `npm run typecheck`: run TypeScript checks
@@ -125,7 +125,7 @@ The extension does not include:
 
 ## Data attribution
 
-Popup word suggestions are bundled static datasets generated offline from [`wordfreq`](https://github.com/rspeer/wordfreq). See [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md) before regenerating or redistributing those files.
+Popup word autocomplete uses bundled static datasets generated offline from [`wordfreq`](https://github.com/rspeer/wordfreq). See [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md) before regenerating or redistributing those files.
 
 ## Contributing
 

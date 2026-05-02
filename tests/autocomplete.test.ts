@@ -1,16 +1,16 @@
 import { describe, expect, it } from "vitest";
 import {
-  AUTO_SUGGESTION_LIMIT,
-  SOURCE_SUGGESTION_LIMIT,
-  TARGET_SUGGESTION_LIMIT,
-  buildPopupSuggestions,
-  getSuggestionRange,
-  lookupSuggestionDataset,
-  normalizeSuggestionQuery,
-} from "@/shared/suggestions";
-import type { SuggestionDataset } from "@/shared/types";
+  AUTO_AUTOCOMPLETE_LIMIT,
+  SOURCE_AUTOCOMPLETE_LIMIT,
+  TARGET_AUTOCOMPLETE_LIMIT,
+  buildPopupAutocomplete,
+  getAutocompleteRange,
+  lookupAutocompleteDataset,
+  normalizeAutocompleteQuery,
+} from "@/shared/autocomplete";
+import type { AutocompleteDataset } from "@/shared/types";
 
-const englishDataset: SuggestionDataset = {
+const englishDataset: AutocompleteDataset = {
   language: "en",
   entries: [
     ["cabal", "cabal", 10],
@@ -26,7 +26,7 @@ const englishDataset: SuggestionDataset = {
   },
 };
 
-const italianDataset: SuggestionDataset = {
+const italianDataset: AutocompleteDataset = {
   language: "it",
   entries: [
     ["caffè", "caffe", 4],
@@ -39,7 +39,7 @@ const italianDataset: SuggestionDataset = {
   },
 };
 
-const spanishDataset: SuggestionDataset = {
+const spanishDataset: AutocompleteDataset = {
   language: "es",
   entries: [
     ["cabello", "cabello", 6],
@@ -52,7 +52,7 @@ const spanishDataset: SuggestionDataset = {
   },
 };
 
-const frenchDataset: SuggestionDataset = {
+const frenchDataset: AutocompleteDataset = {
   language: "fr",
   entries: [
     ["cabane", "cabane", 11],
@@ -65,49 +65,49 @@ const frenchDataset: SuggestionDataset = {
   },
 };
 
-describe("suggestions helpers", () => {
+describe("autocomplete helpers", () => {
   it("folds accents and punctuation for prefix matching", () => {
-    expect(normalizeSuggestionQuery(" Café ")).toBe("cafe");
-    expect(normalizeSuggestionQuery("l'élève")).toBe("leleve");
+    expect(normalizeAutocompleteQuery(" Café ")).toBe("cafe");
+    expect(normalizeAutocompleteQuery("l'élève")).toBe("leleve");
   });
 
   it("returns the indexed range for a two-character prefix", () => {
-    expect(getSuggestionRange(englishDataset, "ca")).toEqual([0, 7]);
-    expect(getSuggestionRange(englishDataset, "zz")).toBeNull();
+    expect(getAutocompleteRange(englishDataset, "ca")).toEqual([0, 7]);
+    expect(getAutocompleteRange(englishDataset, "zz")).toBeNull();
   });
 
   it("returns prefix-only results sorted by rank", () => {
     expect(
-      lookupSuggestionDataset(englishDataset, "ca", 4).map(
-        (suggestion) => suggestion.display,
+      lookupAutocompleteDataset(englishDataset, "ca", 4).map(
+        (autocompleteItem) => autocompleteItem.display,
       ),
     ).toEqual(["camera", "café", "cat", "cabin"]);
   });
 
   it("matches accent-folded queries against accented display words", () => {
     expect(
-      lookupSuggestionDataset(englishDataset, "cafe", 3).map(
-        (suggestion) => suggestion.display,
+      lookupAutocompleteDataset(englishDataset, "cafe", 3).map(
+        (autocompleteItem) => autocompleteItem.display,
       ),
     ).toEqual(["café"]);
     expect(
-      lookupSuggestionDataset(italianDataset, "caffe", 3).map(
-        (suggestion) => suggestion.display,
+      lookupAutocompleteDataset(italianDataset, "caffe", 3).map(
+        (autocompleteItem) => autocompleteItem.display,
       ),
     ).toEqual(["caffè"]);
   });
 
-  it("returns language tags for rendered suggestions", () => {
+  it("returns language tags for rendered autocomplete items", () => {
     expect(
-      lookupSuggestionDataset(italianDataset, "ca", 2).map(
-        (suggestion) => suggestion.tag,
+      lookupAutocompleteDataset(italianDataset, "ca", 2).map(
+        (autocompleteItem) => autocompleteItem.tag,
       ),
     ).toEqual(["IT", "IT"]);
   });
 });
 
-describe("buildPopupSuggestions", () => {
-  const datasets: Partial<Record<"en" | "es" | "fr" | "it", SuggestionDataset>> =
+describe("buildPopupAutocomplete", () => {
+  const datasets: Partial<Record<"en" | "es" | "fr" | "it", AutocompleteDataset>> =
     {
       en: englishDataset,
       es: spanishDataset,
@@ -115,8 +115,8 @@ describe("buildPopupSuggestions", () => {
       it: italianDataset,
     };
 
-  it("returns up to 6 source suggestions and 4 target suggestions", () => {
-    const results = buildPopupSuggestions(datasets, {
+  it("returns up to 6 source autocomplete items and 4 target autocomplete items", () => {
+    const results = buildPopupAutocomplete(datasets, {
       query: "ca",
       dict1: "en",
       dict2: "it",
@@ -124,7 +124,7 @@ describe("buildPopupSuggestions", () => {
 
     expect(
       results
-        .slice(0, SOURCE_SUGGESTION_LIMIT)
+        .slice(0, SOURCE_AUTOCOMPLETE_LIMIT)
         .map((entry) => entry.language),
     ).toEqual(["en", "en", "en", "en", "en", "en"]);
     expect(results.map((entry) => entry.language)).toEqual([
@@ -140,8 +140,8 @@ describe("buildPopupSuggestions", () => {
     ]);
   });
 
-  it("does not backfill missing target slots with source suggestions", () => {
-    const limitedTargetDataset: SuggestionDataset = {
+  it("does not backfill missing target slots with source autocomplete items", () => {
+    const limitedTargetDataset: AutocompleteDataset = {
       language: "it",
       entries: [["caffè", "caffe", 4]],
       index: {
@@ -149,7 +149,7 @@ describe("buildPopupSuggestions", () => {
       },
     };
 
-    const results = buildPopupSuggestions(
+    const results = buildPopupAutocomplete(
       {
         en: englishDataset,
         it: limitedTargetDataset,
@@ -161,12 +161,12 @@ describe("buildPopupSuggestions", () => {
       },
     );
 
-    expect(results).toHaveLength(SOURCE_SUGGESTION_LIMIT + 1);
+    expect(results).toHaveLength(SOURCE_AUTOCOMPLETE_LIMIT + 1);
     expect(results.at(-1)?.display).toBe("caffè");
   });
 
   it("deduplicates normalized duplicates across source and target lists", () => {
-    const results = buildPopupSuggestions(datasets, {
+    const results = buildPopupAutocomplete(datasets, {
       query: "cam",
       dict1: "en",
       dict2: "it",
@@ -179,14 +179,14 @@ describe("buildPopupSuggestions", () => {
     ]);
   });
 
-  it("returns merged-source suggestions only for auto-detect", () => {
-    const results = buildPopupSuggestions(datasets, {
+  it("returns merged-source autocomplete only for auto-detect", () => {
+    const results = buildPopupAutocomplete(datasets, {
       query: "ca",
       dict1: "auto",
       dict2: "it",
     });
 
-    expect(results).toHaveLength(AUTO_SUGGESTION_LIMIT);
+    expect(results).toHaveLength(AUTO_AUTOCOMPLETE_LIMIT);
     expect(results.map((entry) => entry.language)).toEqual([
       "en",
       "es",
@@ -215,7 +215,7 @@ describe("buildPopupSuggestions", () => {
 
   it("returns empty results for short queries", () => {
     expect(
-      buildPopupSuggestions(datasets, {
+      buildPopupAutocomplete(datasets, {
         query: "c",
         dict1: "en",
         dict2: "it",
@@ -224,7 +224,7 @@ describe("buildPopupSuggestions", () => {
   });
 
   it("returns a single-language list when source and target are the same", () => {
-    const results = buildPopupSuggestions(datasets, {
+    const results = buildPopupAutocomplete(datasets, {
       query: "ca",
       dict1: "en",
       dict2: "en",
@@ -236,14 +236,14 @@ describe("buildPopupSuggestions", () => {
     );
   });
 
-  it("caps target suggestions at the configured target quota", () => {
-    const results = buildPopupSuggestions(datasets, {
+  it("caps target autocomplete items at the configured target quota", () => {
+    const results = buildPopupAutocomplete(datasets, {
       query: "ca",
       dict1: "de",
       dict2: "it",
     });
 
-    expect(results).toHaveLength(TARGET_SUGGESTION_LIMIT);
+    expect(results).toHaveLength(TARGET_AUTOCOMPLETE_LIMIT);
     expect(results.map((entry) => entry.language)).toEqual([
       "it",
       "it",
