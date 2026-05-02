@@ -51,6 +51,24 @@ export interface SearchHistoryEntry {
   word: string;
 }
 
+export type AutocompleteLanguage = Extract<LanguageCode, "en" | "es" | "fr" | "it">;
+
+export type AutocompleteDatasetEntry = [display: string, normalized: string, rank: number];
+
+export interface AutocompleteDataset {
+  language: AutocompleteLanguage;
+  entries: AutocompleteDatasetEntry[];
+  index: Record<string, [start: number, end: number]>;
+}
+
+export interface AutocompleteResult {
+  display: string;
+  normalized: string;
+  language: AutocompleteLanguage;
+  tag: string;
+  rank: number;
+}
+
 export interface TranslationMeta {
   requestedDict1: LanguageCode;
   requestedDict2: Exclude<LanguageCode, "auto">;

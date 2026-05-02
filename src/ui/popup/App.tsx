@@ -1,14 +1,29 @@
 import { browser } from "wxt/browser";
-import { useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
+import {
+  useEffect,
+  useEffectEvent,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { CHANGELOG_ITEMS, EXTENSION_VERSION, LANGUAGE_LABELS } from "@/shared/constants";
+import { getPopupAutocomplete } from "@/shared/autocomplete";
 import { msg } from "@/shared/i18n";
 import { sendRuntimeMessage } from "@/shared/messages";
 import { renderLegacyPopupResult } from "@/shared/render-legacy-popup";
 import { getSettings, getUiState, updateSettings, updateUiState } from "@/shared/storage";
-import type { SearchHistoryEntry, TranslationMessageResponse } from "@/shared/types";
+import type {
+  AutocompleteResult,
+  SearchHistoryEntry,
+  TranslationMessageResponse,
+} from "@/shared/types";
 
 export function PopupApp() {
+  const rootRef = useRef<HTMLElement | null>(null);
   const contentRef = useRef<HTMLElement | null>(null);
+  const searchRegionRef = useRef<HTMLDivElement | null>(null);
+  const autocompleteRef = useRef<HTMLDivElement | null>(null);
   const [settings, setSettings] = useState<Awaited<ReturnType<typeof getSettings>> | null>(null);
   const [query, setQuery] = useState("");
   const [dict1, setDict1] = useState<Awaited<ReturnType<typeof getSettings>>["dict1"]>(null);
@@ -18,6 +33,10 @@ export function PopupApp() {
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState<SearchHistoryEntry[]>([]);
   const [showChangelog, setShowChangelog] = useState(false);
+  const [autocompleteItems, setAutocompleteItems] = useState<AutocompleteResult[]>([]);
+  const [activeAutocompleteIndex, setActiveAutocompleteIndex] = useState(-1);
+  const [autocompleteSpacerHeight, setAutocompleteSpacerHeight] = useState(0);
+  const [autocompleteMaxHeight, setAutocompleteMaxHeight] = useState<number | null>(null);
 
   const handleLookupWord = useEffectEvent(
     async (lookup: {
@@ -50,6 +69,112 @@ export function PopupApp() {
   }, [settings]);
 
   useEffect(() => {
+    if (loading) {
+      return;
+    }
+
+    let cancelled = false;
+
+    void (async () => {
+      const nextAutocompleteItems = await getPopupAutocomplete({
+        query,
+        dict1,
+        dict2,
+      });
+      if (cancelled) {
+        return;
+      }
+
+      setAutocompleteItems(nextAutocompleteItems);
+      setActiveAutocompleteIndex(-1);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [query, dict1, dict2, loading]);
+
+  useEffect(() => {
+    const handleDocumentPointerDown = (event: MouseEvent) => {
+      if (
+        searchRegionRef.current &&
+        event.target instanceof Node &&
+        !searchRegionRef.current.contains(event.target)
+      ) {
+        setAutocompleteItems([]);
+        setActiveAutocompleteIndex(-1);
+      }
+    };
+
+    document.addEventListener("mousedown", handleDocumentPointerDown);
+    return () => {
+      document.removeEventListener("mousedown", handleDocumentPointerDown);
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      if (!autocompleteItems.length) {
+        if (autocompleteSpacerHeight !== 0) {
+          setAutocompleteSpacerHeight(0);
+        }
+        if (autocompleteMaxHeight !== null) {
+          setAutocompleteMaxHeight(null);
+        }
+        return;
+      }
+
+      const root = rootRef.current;
+      const autocompleteElement = autocompleteRef.current;
+      if (!root || !autocompleteElement) {
+        return;
+      }
+
+      const rootRect = root.getBoundingClientRect();
+      const autocompleteRect = autocompleteElement.getBoundingClientRect();
+      const baselineRootHeight = Math.max(
+        0,
+        Math.ceil(rootRect.height - autocompleteSpacerHeight),
+      );
+      const baselineRootBottom = rootRect.bottom - autocompleteSpacerHeight;
+      const availableExpansion = Math.max(0, 500 - baselineRootHeight);
+      const overflow = Math.max(
+        0,
+        Math.ceil(autocompleteRect.bottom - baselineRootBottom + 4),
+      );
+      const nextAutocompleteSpacerHeight = Math.min(overflow, availableExpansion);
+      const remainingOverflow = overflow - nextAutocompleteSpacerHeight;
+      const maxVisibleAutocompleteHeight = Math.max(
+        120,
+        Math.floor(
+          baselineRootBottom +
+            availableExpansion -
+            autocompleteRect.top -
+            4,
+        ),
+      );
+      const nextAutocompleteMaxHeight =
+        remainingOverflow > 0
+          ? Math.min(
+              autocompleteElement.scrollHeight,
+              maxVisibleAutocompleteHeight,
+            )
+          : null;
+
+      if (nextAutocompleteSpacerHeight !== autocompleteSpacerHeight) {
+        setAutocompleteSpacerHeight(nextAutocompleteSpacerHeight);
+      }
+      if (nextAutocompleteMaxHeight !== autocompleteMaxHeight) {
+        setAutocompleteMaxHeight(nextAutocompleteMaxHeight);
+      }
+    });
+
+    return () => {
+      cancelAnimationFrame(frame);
+    };
+  }, [autocompleteItems, autocompleteSpacerHeight, autocompleteMaxHeight]);
+
+  useEffect(() => {
     if (!contentRef.current) {
       return;
     }
@@ -70,6 +195,7 @@ export function PopupApp() {
   }, [currentResponse]);
 
   const canSearch = useMemo(() => Boolean(query.trim() && dict1 && dict2), [query, dict1, dict2]);
+  const hasAutocomplete = autocompleteItems.length > 0;
 
   async function persistLanguageChoice(nextDict1: typeof dict1, nextDict2: typeof dict2): Promise<void> {
     if (!settings || settings.defaultLang || !settings.lastLang) {
@@ -94,6 +220,8 @@ export function PopupApp() {
 
     setLoading(true);
     setError("");
+    setAutocompleteItems([]);
+    setActiveAutocompleteIndex(-1);
     if (contentRef.current) {
       contentRef.current.innerHTML = '<div class="WRTloader"></div>';
     }
@@ -115,6 +243,13 @@ export function PopupApp() {
       const nextEntry: SearchHistoryEntry = { dict1: source, dict2: target, word };
       return replaceHistory ? current : [...current, nextEntry];
     });
+  }
+
+  async function selectAutocompleteItem(
+    autocompleteItem: AutocompleteResult,
+  ): Promise<void> {
+    setQuery(autocompleteItem.display);
+    await runSearch(autocompleteItem.display.trim());
   }
 
   async function handleSourceChange(nextValue: string): Promise<void> {
@@ -165,7 +300,12 @@ export function PopupApp() {
   }
 
   return (
-    <main id="WRText-root">
+    <main
+      id="WRText-root"
+      ref={(node) => {
+        rootRef.current = node;
+      }}
+    >
       <section id="WRText-header">
         <div id="WRText-LeftBtns">
           <div id="WRText-back" className="WRText-button" style={{ display: history.length > 1 ? "block" : "none" }}>
@@ -182,7 +322,7 @@ export function PopupApp() {
           </div>
         </div>
 
-        <div id="WRText-search">
+        <div id="WRText-search" ref={searchRegionRef}>
           <div id="WRText-searchWrap">
             <input
               id="WRText-searchBox"
@@ -192,6 +332,38 @@ export function PopupApp() {
               maxLength={200}
               onChange={(event) => setQuery(event.target.value)}
               onKeyDown={(event) => {
+                if (event.key === "ArrowDown" && hasAutocomplete) {
+                  event.preventDefault();
+                  setActiveAutocompleteIndex((current) =>
+                    current >= autocompleteItems.length - 1 ? 0 : current + 1,
+                  );
+                  return;
+                }
+
+                if (event.key === "ArrowUp" && hasAutocomplete) {
+                  event.preventDefault();
+                  setActiveAutocompleteIndex((current) =>
+                    current <= 0 ? autocompleteItems.length - 1 : current - 1,
+                  );
+                  return;
+                }
+
+                if (
+                  event.key === "Enter" &&
+                  activeAutocompleteIndex >= 0 &&
+                  activeAutocompleteIndex < autocompleteItems.length
+                ) {
+                  const activeAutocompleteItem =
+                    autocompleteItems[activeAutocompleteIndex];
+                  if (!activeAutocompleteItem) {
+                    return;
+                  }
+
+                  event.preventDefault();
+                  void selectAutocompleteItem(activeAutocompleteItem);
+                  return;
+                }
+
                 if (event.key === "Enter" && canSearch) {
                   void runSearch(query.trim());
                 }
@@ -204,6 +376,40 @@ export function PopupApp() {
               disabled={!canSearch || loading}
               onClick={() => void runSearch(query.trim())}
             />
+            {hasAutocomplete ? (
+              <div
+                id="WRText-autocomplete"
+                ref={(node) => {
+                  autocompleteRef.current = node;
+                }}
+                role="listbox"
+                style={{
+                  maxHeight: autocompleteMaxHeight
+                    ? `${autocompleteMaxHeight}px`
+                    : undefined,
+                }}
+              >
+                {autocompleteItems.map((autocompleteItem, index) => (
+                  <button
+                    key={`${autocompleteItem.language}-${autocompleteItem.display}-${index}`}
+                    type="button"
+                    className={`WRText-autocomplete${index === activeAutocompleteIndex ? " is-active" : ""}`}
+                    role="option"
+                    aria-selected={index === activeAutocompleteIndex}
+                    onMouseEnter={() => setActiveAutocompleteIndex(index)}
+                    onMouseDown={(event) => event.preventDefault()}
+                    onClick={() => void selectAutocompleteItem(autocompleteItem)}
+                  >
+                    <span className="WRText-autocomplete__tag">
+                      {autocompleteItem.tag}
+                    </span>
+                    <span className="WRText-autocomplete__label">
+                      {autocompleteItem.display}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            ) : null}
           </div>
 
           <div id="WRText-langSel">
@@ -261,6 +467,14 @@ export function PopupApp() {
       >
         {!currentResponse && !error ? null : null}
       </section>
+
+      {hasAutocomplete && autocompleteSpacerHeight > 0 ? (
+        <div
+          id="WRText-autocompleteSpacer"
+          aria-hidden="true"
+          style={{ height: `${autocompleteSpacerHeight}px` }}
+        />
+      ) : null}
 
       <section id="WRText-footer">
         {showChangelog ? (

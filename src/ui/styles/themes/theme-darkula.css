@@ -9,6 +9,9 @@
     --color-surface-tooltip: rgba(0, 0, 0, 0.8);
     --color-surface-scrollbar-track: #1b1b1b;
     --color-surface-changelog: #1b1b1b;
+    --color-surface-autocomplete: #2f3135;
+    --color-surface-autocomplete-hover: #3a3c40;
+    --color-surface-autocomplete-tag: #454952;
     --color-border: #393a3c;
     --color-border-control: #555555;
     --color-border-input: #555555;
@@ -20,6 +23,7 @@
     --color-text-example: gray;
     --color-text-pronunciation: firebrick;
     --color-text-placeholder: inherit;
+    --color-text-autocomplete-tag: #d2d5dc;
     --color-link: firebrick;
     --color-link-visited: #b23d3f;
     --color-accent: firebrick;
