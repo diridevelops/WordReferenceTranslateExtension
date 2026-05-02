@@ -10,6 +10,9 @@
     --color-surface-tooltip: rgba(0, 0, 0, 0.8);
     --color-surface-scrollbar-track: #f9f9ff;
     --color-surface-changelog: #d3d3e6;
+    --color-surface-suggestion: #ffffff;
+    --color-surface-suggestion-hover: #f2f2f7;
+    --color-surface-suggestion-tag: #d7d7df;
     --color-border: #dcdce6;
     --color-border-control: #c5c5c5;
     --color-border-input: #dadada;
@@ -21,6 +24,7 @@
     --color-text-example: rgba(0, 0, 0, 0.65);
     --color-text-pronunciation: rgba(0, 0, 0, 0.7);
     --color-text-placeholder: #8a8a8a;
+    --color-text-suggestion-tag: #5f5f6d;
     --color-link: #0645ad;
     --color-link-visited: #819;
     --color-accent: #5e58c6;

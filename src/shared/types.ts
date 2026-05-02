@@ -51,6 +51,24 @@ export interface SearchHistoryEntry {
   word: string;
 }
 
+export type SuggestionLanguage = Extract<LanguageCode, "en" | "es" | "fr" | "it">;
+
+export type SuggestionDatasetEntry = [display: string, normalized: string, rank: number];
+
+export interface SuggestionDataset {
+  language: SuggestionLanguage;
+  entries: SuggestionDatasetEntry[];
+  index: Record<string, [start: number, end: number]>;
+}
+
+export interface SuggestionResult {
+  display: string;
+  normalized: string;
+  language: SuggestionLanguage;
+  tag: string;
+  rank: number;
+}
+
 export interface TranslationMeta {
   requestedDict1: LanguageCode;
   requestedDict2: Exclude<LanguageCode, "auto">;

@@ -1,14 +1,29 @@
 import { browser } from "wxt/browser";
-import { useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
+import {
+  useEffect,
+  useEffectEvent,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { CHANGELOG_ITEMS, EXTENSION_VERSION, LANGUAGE_LABELS } from "@/shared/constants";
 import { msg } from "@/shared/i18n";
 import { sendRuntimeMessage } from "@/shared/messages";
 import { renderLegacyPopupResult } from "@/shared/render-legacy-popup";
+import { getPopupSuggestions } from "@/shared/suggestions";
 import { getSettings, getUiState, updateSettings, updateUiState } from "@/shared/storage";
-import type { SearchHistoryEntry, TranslationMessageResponse } from "@/shared/types";
+import type {
+  SearchHistoryEntry,
+  SuggestionResult,
+  TranslationMessageResponse,
+} from "@/shared/types";
 
 export function PopupApp() {
+  const rootRef = useRef<HTMLElement | null>(null);
   const contentRef = useRef<HTMLElement | null>(null);
+  const searchRegionRef = useRef<HTMLDivElement | null>(null);
+  const suggestionsRef = useRef<HTMLDivElement | null>(null);
   const [settings, setSettings] = useState<Awaited<ReturnType<typeof getSettings>> | null>(null);
   const [query, setQuery] = useState("");
   const [dict1, setDict1] = useState<Awaited<ReturnType<typeof getSettings>>["dict1"]>(null);
@@ -18,6 +33,10 @@ export function PopupApp() {
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState<SearchHistoryEntry[]>([]);
   const [showChangelog, setShowChangelog] = useState(false);
+  const [suggestions, setSuggestions] = useState<SuggestionResult[]>([]);
+  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
+  const [suggestionSpacerHeight, setSuggestionSpacerHeight] = useState(0);
+  const [suggestionMaxHeight, setSuggestionMaxHeight] = useState<number | null>(null);
 
   const handleLookupWord = useEffectEvent(
     async (lookup: {
@@ -50,6 +69,109 @@ export function PopupApp() {
   }, [settings]);
 
   useEffect(() => {
+    if (loading) {
+      return;
+    }
+
+    let cancelled = false;
+
+    void (async () => {
+      const nextSuggestions = await getPopupSuggestions({
+        query,
+        dict1,
+        dict2,
+      });
+      if (cancelled) {
+        return;
+      }
+
+      setSuggestions(nextSuggestions);
+      setActiveSuggestionIndex(-1);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [query, dict1, dict2, loading]);
+
+  useEffect(() => {
+    const handleDocumentPointerDown = (event: MouseEvent) => {
+      if (
+        searchRegionRef.current &&
+        event.target instanceof Node &&
+        !searchRegionRef.current.contains(event.target)
+      ) {
+        setSuggestions([]);
+        setActiveSuggestionIndex(-1);
+      }
+    };
+
+    document.addEventListener("mousedown", handleDocumentPointerDown);
+    return () => {
+      document.removeEventListener("mousedown", handleDocumentPointerDown);
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!suggestions.length) {
+      if (suggestionSpacerHeight !== 0) {
+        setSuggestionSpacerHeight(0);
+      }
+      if (suggestionMaxHeight !== null) {
+        setSuggestionMaxHeight(null);
+      }
+      return;
+    }
+
+    const frame = requestAnimationFrame(() => {
+      const root = rootRef.current;
+      const suggestionsElement = suggestionsRef.current;
+      if (!root || !suggestionsElement) {
+        return;
+      }
+
+      const rootRect = root.getBoundingClientRect();
+      const suggestionsRect = suggestionsElement.getBoundingClientRect();
+      const baselineRootHeight = Math.max(
+        0,
+        Math.ceil(rootRect.height - suggestionSpacerHeight),
+      );
+      const baselineRootBottom = rootRect.bottom - suggestionSpacerHeight;
+      const availableExpansion = Math.max(0, 500 - baselineRootHeight);
+      const overflow = Math.max(
+        0,
+        Math.ceil(suggestionsRect.bottom - baselineRootBottom + 4),
+      );
+      const nextSpacerHeight = Math.min(overflow, availableExpansion);
+      const remainingOverflow = overflow - nextSpacerHeight;
+      const maxVisibleSuggestionsHeight = Math.max(
+        120,
+        Math.floor(
+          baselineRootBottom +
+            availableExpansion -
+            suggestionsRect.top -
+            4,
+        ),
+      );
+      const nextMaxHeight =
+        remainingOverflow > 0
+          ? Math.min(suggestionsElement.scrollHeight, maxVisibleSuggestionsHeight)
+          : null;
+
+      if (nextSpacerHeight !== suggestionSpacerHeight) {
+        setSuggestionSpacerHeight(nextSpacerHeight);
+      }
+      if (nextMaxHeight !== suggestionMaxHeight) {
+        setSuggestionMaxHeight(nextMaxHeight);
+      }
+    });
+
+    return () => {
+      cancelAnimationFrame(frame);
+    };
+  }, [suggestions, suggestionSpacerHeight, suggestionMaxHeight]);
+
+  useEffect(() => {
     if (!contentRef.current) {
       return;
     }
@@ -70,6 +192,7 @@ export function PopupApp() {
   }, [currentResponse]);
 
   const canSearch = useMemo(() => Boolean(query.trim() && dict1 && dict2), [query, dict1, dict2]);
+  const hasSuggestions = suggestions.length > 0;
 
   async function persistLanguageChoice(nextDict1: typeof dict1, nextDict2: typeof dict2): Promise<void> {
     if (!settings || settings.defaultLang || !settings.lastLang) {
@@ -94,6 +217,8 @@ export function PopupApp() {
 
     setLoading(true);
     setError("");
+    setSuggestions([]);
+    setActiveSuggestionIndex(-1);
     if (contentRef.current) {
       contentRef.current.innerHTML = '<div class="WRTloader"></div>';
     }
@@ -115,6 +240,11 @@ export function PopupApp() {
       const nextEntry: SearchHistoryEntry = { dict1: source, dict2: target, word };
       return replaceHistory ? current : [...current, nextEntry];
     });
+  }
+
+  async function selectSuggestion(suggestion: SuggestionResult): Promise<void> {
+    setQuery(suggestion.display);
+    await runSearch(suggestion.display.trim());
   }
 
   async function handleSourceChange(nextValue: string): Promise<void> {
@@ -165,7 +295,12 @@ export function PopupApp() {
   }
 
   return (
-    <main id="WRText-root">
+    <main
+      id="WRText-root"
+      ref={(node) => {
+        rootRef.current = node;
+      }}
+    >
       <section id="WRText-header">
         <div id="WRText-LeftBtns">
           <div id="WRText-back" className="WRText-button" style={{ display: history.length > 1 ? "block" : "none" }}>
@@ -182,7 +317,7 @@ export function PopupApp() {
           </div>
         </div>
 
-        <div id="WRText-search">
+        <div id="WRText-search" ref={searchRegionRef}>
           <div id="WRText-searchWrap">
             <input
               id="WRText-searchBox"
@@ -192,6 +327,37 @@ export function PopupApp() {
               maxLength={200}
               onChange={(event) => setQuery(event.target.value)}
               onKeyDown={(event) => {
+                if (event.key === "ArrowDown" && hasSuggestions) {
+                  event.preventDefault();
+                  setActiveSuggestionIndex((current) =>
+                    current >= suggestions.length - 1 ? 0 : current + 1,
+                  );
+                  return;
+                }
+
+                if (event.key === "ArrowUp" && hasSuggestions) {
+                  event.preventDefault();
+                  setActiveSuggestionIndex((current) =>
+                    current <= 0 ? suggestions.length - 1 : current - 1,
+                  );
+                  return;
+                }
+
+                if (
+                  event.key === "Enter" &&
+                  activeSuggestionIndex >= 0 &&
+                  activeSuggestionIndex < suggestions.length
+                ) {
+                  const activeSuggestion = suggestions[activeSuggestionIndex];
+                  if (!activeSuggestion) {
+                    return;
+                  }
+
+                  event.preventDefault();
+                  void selectSuggestion(activeSuggestion);
+                  return;
+                }
+
                 if (event.key === "Enter" && canSearch) {
                   void runSearch(query.trim());
                 }
@@ -204,6 +370,40 @@ export function PopupApp() {
               disabled={!canSearch || loading}
               onClick={() => void runSearch(query.trim())}
             />
+            {hasSuggestions ? (
+              <div
+                id="WRText-suggestions"
+                ref={(node) => {
+                  suggestionsRef.current = node;
+                }}
+                role="listbox"
+                style={{
+                  maxHeight: suggestionMaxHeight
+                    ? `${suggestionMaxHeight}px`
+                    : undefined,
+                }}
+              >
+                {suggestions.map((suggestion, index) => (
+                  <button
+                    key={`${suggestion.language}-${suggestion.display}-${index}`}
+                    type="button"
+                    className={`WRText-suggestion${index === activeSuggestionIndex ? " is-active" : ""}`}
+                    role="option"
+                    aria-selected={index === activeSuggestionIndex}
+                    onMouseEnter={() => setActiveSuggestionIndex(index)}
+                    onMouseDown={(event) => event.preventDefault()}
+                    onClick={() => void selectSuggestion(suggestion)}
+                  >
+                    <span className="WRText-suggestion__tag">
+                      {suggestion.tag}
+                    </span>
+                    <span className="WRText-suggestion__label">
+                      {suggestion.display}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            ) : null}
           </div>
 
           <div id="WRText-langSel">
@@ -261,6 +461,14 @@ export function PopupApp() {
       >
         {!currentResponse && !error ? null : null}
       </section>
+
+      {hasSuggestions && suggestionSpacerHeight > 0 ? (
+        <div
+          id="WRText-suggestionSpacer"
+          aria-hidden="true"
+          style={{ height: `${suggestionSpacerHeight}px` }}
+        />
+      ) : null}
 
       <section id="WRText-footer">
         {showChangelog ? (

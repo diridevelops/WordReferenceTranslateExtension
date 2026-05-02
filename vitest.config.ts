@@ -10,6 +10,8 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     globals: true,
+    pool: "threads",
+    fileParallelism: false,
     coverage: {
       provider: "v8",
       reporter: ["text", "html"],
