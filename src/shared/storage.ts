@@ -41,8 +41,28 @@ export async function updateSettings(
 }
 
 export async function ensureSettings(): Promise<Settings> {
-  const settings = await getSettings();
-  await setSettings(settings);
+  const data = await browser.storage.sync.get(SETTINGS_KEY);
+  const raw = data[SETTINGS_KEY] as Partial<Settings> | undefined;
+  const settings = mergeSettings(raw);
+
+  if (
+    !raw ||
+    raw.version !== 2 ||
+    raw.defaultLang === undefined ||
+    raw.lastLang === undefined ||
+    raw.dict1 === undefined ||
+    raw.dict2 === undefined ||
+    raw.translContext === undefined ||
+    raw.translISPopup === undefined ||
+    raw.translISPopupIcon === undefined ||
+    raw.translISPopupComb === undefined ||
+    raw.translISKeyboardInput === undefined ||
+    raw.themeSel === undefined ||
+    raw.fontSize === undefined
+  ) {
+    await setSettings(settings);
+  }
+
   return settings;
 }
 
@@ -61,7 +81,17 @@ export async function updateUiState(
 }
 
 export async function ensureUiState(): Promise<UiState> {
-  const state = await getUiState();
-  await browser.storage.local.set({ [UI_STATE_KEY]: state });
+  const data = await browser.storage.local.get(UI_STATE_KEY);
+  const raw = data[UI_STATE_KEY] as Partial<UiState> | undefined;
+  const state = mergeUiState(raw);
+
+  if (
+    !raw ||
+    raw.changelogViewedVersion === undefined ||
+    raw.pendingChangelogVersion === undefined
+  ) {
+    await browser.storage.local.set({ [UI_STATE_KEY]: state });
+  }
+
   return state;
 }
