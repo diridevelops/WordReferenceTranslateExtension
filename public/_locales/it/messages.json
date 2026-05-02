@@ -35,6 +35,18 @@
     "message": "Qualcosa \u00e8 andato storto. Contattami riferendomi l'errore qui sotto",
     "description": "Translation error message"
   },
+  "popNoTranslationTitle": {
+    "message": "Traduzione non trovata",
+    "description": "Title shown when WordReference has no direct translation result"
+  },
+  "popNoTranslationMessage": {
+    "message": "Prova una di queste parole simili.",
+    "description": "Fallback message shown when a translation is not found"
+  },
+  "popSimilarWordsLabel": {
+    "message": "Parole simili",
+    "description": "Label shown above similar words in the not-found fallback card"
+  },
   "optTitle": {
     "message": "Impostazioni",
     "description": "'Settings' - Title shown on the browser tab"

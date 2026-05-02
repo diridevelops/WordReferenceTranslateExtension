@@ -1,4 +1,5 @@
 import popupCss from "@/ui/styles/in-page/in-page-popup.css?inline";
+import { parseTranslationHtml } from "@/core/parse";
 import { renderLegacyPopupResult } from "@/shared/render-legacy-popup";
 import type { InPagePopupMessage } from "@/shared/types";
 
@@ -46,14 +47,20 @@ window.addEventListener("message", (event: MessageEvent) => {
 
   if (data.type === "WRT_RENDER") {
     applyTheme(data.payload.theme, data.payload.fontSize);
-    renderLegacyPopupResult(container, data.payload.html, data.payload.meta, {
-      onLookupWord: ({ word, dict1, dict2 }) => {
-        postMessage({
-          type: "WRT_LOOKUP",
-          payload: { word, dict1, dict2 },
-        });
-      },
-    });
+    try {
+      const result = parseTranslationHtml(data.payload.html, data.payload.meta);
+      renderLegacyPopupResult(container, result, {
+        onLookupWord: ({ word, dict1, dict2 }) => {
+          postMessage({
+            type: "WRT_LOOKUP",
+            payload: { word, dict1, dict2 },
+          });
+        },
+      });
+    } catch (error) {
+      container.textContent =
+        error instanceof Error ? error.message : "Something went wrong.";
+    }
   }
 });
 

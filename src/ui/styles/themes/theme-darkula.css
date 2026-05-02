@@ -17,12 +17,12 @@
     --color-border-input: #555555;
     --color-text: #b6b6b6;
     --color-text-muted: gray;
-    --color-text-subtle: #bababa;
+    --color-text-subtle: #888;
     --color-text-footer: #5a5a5a;
     --color-text-tooltip: #fff;
     --color-text-example: gray;
     --color-text-pronunciation: firebrick;
-    --color-text-placeholder: inherit;
+    --color-text-placeholder: #7f7f7f;
     --color-text-autocomplete-tag: #d2d5dc;
     --color-link: firebrick;
     --color-link-visited: #b23d3f;

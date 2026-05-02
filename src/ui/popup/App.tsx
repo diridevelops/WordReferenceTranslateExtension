@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { parseTranslationHtml } from "@/core/parse";
 import { CHANGELOG_ITEMS, EXTENSION_VERSION, LANGUAGE_LABELS } from "@/shared/constants";
 import { getPopupAutocomplete } from "@/shared/autocomplete";
 import { msg } from "@/shared/i18n";
@@ -189,9 +190,18 @@ export function PopupApp() {
       return;
     }
 
-    renderLegacyPopupResult(contentRef.current, currentResponse.html, currentResponse.meta, {
-      onLookupWord: handleLookupWord,
-    });
+    try {
+      const result = parseTranslationHtml(
+        currentResponse.html,
+        currentResponse.meta,
+      );
+      renderLegacyPopupResult(contentRef.current, result, {
+        onLookupWord: handleLookupWord,
+      });
+    } catch (error) {
+      contentRef.current.textContent =
+        error instanceof Error ? error.message : msg("popError", "Something went wrong.");
+    }
   }, [currentResponse]);
 
   const canSearch = useMemo(() => Boolean(query.trim() && dict1 && dict2), [query, dict1, dict2]);

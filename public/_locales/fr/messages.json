@@ -31,6 +31,18 @@
         "message": "Une erreur s'est produite. Contactez-moi en indiquant l'erreur ci-dessous",
         "description": "Translation error message"
     },
+    "popNoTranslationTitle": {
+        "message": "Aucune traduction trouv\u00e9e",
+        "description": "Title shown when WordReference has no direct translation result"
+    },
+    "popNoTranslationMessage": {
+        "message": "Essayez plut\u00f4t l'un de ces mots similaires.",
+        "description": "Fallback message shown when a translation is not found"
+    },
+    "popSimilarWordsLabel": {
+        "message": "Mots similaires",
+        "description": "Label shown above similar words in the not-found fallback card"
+    },
     "optTitle": {
         "message": "Param\u00e8tres",
         "description": "'Settings' - Title shown on the browser tab"
