@@ -10,6 +10,16 @@ function rewriteTooltipMarkup(html: string): string {
   });
 }
 
+function parseMarkupNodes(document: Document, markup: string): Node[] {
+  const DOMParserCtor = document.defaultView?.DOMParser ?? globalThis.DOMParser;
+  if (!DOMParserCtor) {
+    return [document.createTextNode(markup)];
+  }
+
+  const parsed = new DOMParserCtor().parseFromString(markup, "text/html");
+  return [...parsed.body.childNodes].map((node) => document.importNode(node, true));
+}
+
 export function toAbsoluteWordReferenceUrl(url: string): string {
   if (url.startsWith("/")) {
     return `${WORDREFERENCE_ROOT}${url}`;
@@ -73,7 +83,8 @@ export function sanitizeWordReferenceRoot(root: ParentNode): void {
   });
 
   root.querySelectorAll<HTMLElement>(".tooltip span").forEach((tooltipText) => {
-    tooltipText.innerHTML = rewriteTooltipMarkup(tooltipText.innerHTML);
+    const rewritten = rewriteTooltipMarkup(tooltipText.textContent ?? "");
+    tooltipText.replaceChildren(...parseMarkupNodes(tooltipText.ownerDocument, rewritten));
   });
 }
 

@@ -20,6 +20,16 @@ import type {
   TranslationMessageResponse,
 } from "@/shared/types";
 
+function clearElement(element: HTMLElement): void {
+  element.replaceChildren();
+}
+
+function renderLoader(element: HTMLElement): void {
+  const loader = element.ownerDocument.createElement("div");
+  loader.className = "WRTloader";
+  element.replaceChildren(loader);
+}
+
 export function PopupApp() {
   const rootRef = useRef<HTMLElement | null>(null);
   const contentRef = useRef<HTMLElement | null>(null);
@@ -181,7 +191,7 @@ export function PopupApp() {
     }
 
     if (!currentResponse) {
-      contentRef.current.innerHTML = "";
+      clearElement(contentRef.current);
       return;
     }
 
@@ -233,7 +243,7 @@ export function PopupApp() {
     setAutocompleteItems([]);
     setActiveAutocompleteIndex(-1);
     if (contentRef.current) {
-      contentRef.current.innerHTML = '<div class="WRTloader"></div>';
+      renderLoader(contentRef.current);
     }
 
     const response = await sendRuntimeMessage<TranslationMessageResponse>({
