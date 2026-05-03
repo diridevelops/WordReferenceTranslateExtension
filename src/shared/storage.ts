@@ -50,6 +50,7 @@ export async function ensureSettings(): Promise<Settings> {
     raw.version !== 2 ||
     raw.defaultLang === undefined ||
     raw.lastLang === undefined ||
+    raw.popupAutocomplete === undefined ||
     raw.dict1 === undefined ||
     raw.dict2 === undefined ||
     raw.translContext === undefined ||

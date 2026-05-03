@@ -28,8 +28,14 @@ export function InSiteSection(props: {
       <div className="options-card__body">
         <p className="options-muted">
           {pageAccess
-            ? "Optional page access is enabled."
-            : "Enable page access to use context menu and in-page translation features."}
+            ? msg(
+                "optPageAccessEnabled",
+                "Optional page access is enabled.",
+              )
+            : msg(
+                "optPageAccessPrompt",
+                "Allow page access to use in-page translation features.",
+              )}
         </p>
 
         <ToggleField
@@ -94,7 +100,7 @@ export function InSiteSection(props: {
           checked={settings.translISPopupComb}
           label={msg(
             "optTranslISPopupCombLab",
-            "Translate the selected word directly in the page by pressing this combination (click to modify)",
+            "Translate the selected word directly in the page by pressing this combination",
           )}
           help={msg(
             "optTranslISPopupCombHelp",

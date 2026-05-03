@@ -71,9 +71,27 @@
     "message": "Los idiomas que seleccione en la ventana emergente se guardar\u00e1n para su pr\u00f3ximo uso",
     "description": "Tooltip text"
   },
+
+  "optPopupAutocompleteLab": {
+    "message": "Mostrar autocompletado de palabras en la b\u00fasqueda de la ventana emergente",
+    "description": "Toggle label for popup autocomplete"
+  },
+
+  "optPopupAutocompleteHelp": {
+    "message": "Mientras escribe en la ventana emergente de la extensi\u00f3n, aparecer\u00e1n palabras sugeridas debajo del cuadro de b\u00fasqueda",
+    "description": "Tooltip text"
+  },
   "optInSite": {
     "message": "Integraci\u00f3n al navegador",
     "description": "'In-Site integration' - fieldset text"
+  },
+  "optPageAccessEnabled": {
+    "message": "El acceso opcional a las p\u00e1ginas est\u00e1 habilitado.",
+    "description": "Text shown when optional page access is already granted"
+  },
+  "optPageAccessPrompt": {
+    "message": "Concede acceso a las p\u00e1ginas para usar las funciones de traducci\u00f3n dentro de la p\u00e1gina.",
+    "description": "Text shown when optional page access is still required"
   },
   "optTranslContextLab": {
     "message": "Traducir la palabra seleccionada desde el men\u00fa contextual (clic derecho)",
@@ -100,8 +118,8 @@
     "description": "Tooltip text"
   },
   "optTranslISPopupCombLab": {
-    "message": "Traduzca la palabra seleccionada directamente en la p\u00e1gina web pulsando esta combinaci\u00f3n (haga clic para modificar)",
-    "description": "'Translate the selected word directly in the page by pressing this combination (click to modify)' - checkbox text"
+    "message": "Traduzca la palabra seleccionada directamente en la p\u00e1gina web pulsando esta combinaci\u00f3n",
+    "description": "'Translate the selected word directly in the page by pressing this combination' - checkbox text"
   },
   "optTranslISPopupCombHelp": {
     "message": "Tres teclas m\u00e1ximo. Algunos atajos est\u00e1n reservados por el navegador y no pueden ser ingresados",
@@ -142,6 +160,14 @@
   "optOpenSourceText": {
     "message": "Esta extensi\u00f3n es de c\u00f3digo abierto y el c\u00f3digo fuente est\u00e1 disponible aqu\u00ed:",
     "description": "Open-source contact text"
+  },
+  "optDonationText": {
+    "message": "Apoya este proyecto:",
+    "description": "Donation section intro text"
+  },
+  "optDonationButton": {
+    "message": "C\u00f3mprame un caf\u00e9 ❤️",
+    "description": "Donation button label"
   },
   "optContacts": {
     "message": "Contacto",

@@ -271,8 +271,10 @@ a {
 
 .shortcut-builder {
   width: fit-content;
-  display: grid;
-  gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
   padding: 10px;
   border: 1px solid #d7d9e4;
   border-radius: 6px;
@@ -280,24 +282,30 @@ a {
 }
 
 .shortcut-builder__summary {
+  flex: 0 0 100%;
   color: #243b7f;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .shortcut-builder__group {
-  display: grid;
-  gap: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .shortcut-builder__label {
   color: #555d73;
   font-size: 13px;
+  white-space: nowrap;
 }
 
 .shortcut-builder__modifiers {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .shortcut-builder__modifier {
@@ -313,6 +321,10 @@ a {
 
 .shortcut-builder__modifier input {
   margin: 0;
+}
+
+.shortcut-builder .options-select {
+  min-width: 128px;
 }
 
 .ghost-button {
@@ -333,6 +345,33 @@ a {
 .options-stack {
   display: grid;
   gap: 10px;
+}
+
+.options-donation {
+  display: grid;
+  gap: 8px;
+}
+
+.options-donation__button {
+  width: fit-content;
+  min-width: 190px;
+  margin-left: 0.5rem;
+  padding: 6px 12px;
+  border: 1px solid #d4a300;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #ffd85a 0%, #e9bb1a 100%);
+  box-shadow: 0 2px 8px rgba(183, 136, 0, 0.18);
+  color: #111;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+}
+
+.options-donation__button:hover,
+.options-donation__button:focus-visible {
+  background: linear-gradient(180deg, #ffe279 0%, #efc631 100%);
+  color: #111;
+  text-decoration: none;
 }
 
 .options-list {

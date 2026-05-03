@@ -80,8 +80,18 @@ export function PopupApp() {
   }, [settings]);
 
   useEffect(() => {
-    if (loading) {
-      return;
+    let frameId: number | null = null;
+
+    if (!settings?.popupAutocomplete || loading) {
+      frameId = window.requestAnimationFrame(() => {
+        setAutocompleteItems([]);
+        setActiveAutocompleteIndex(-1);
+      });
+      return () => {
+        if (frameId !== null) {
+          window.cancelAnimationFrame(frameId);
+        }
+      };
     }
 
     let cancelled = false;
@@ -102,8 +112,11 @@ export function PopupApp() {
 
     return () => {
       cancelled = true;
+      if (frameId !== null) {
+        window.cancelAnimationFrame(frameId);
+      }
     };
-  }, [query, dict1, dict2, loading]);
+  }, [query, dict1, dict2, loading, settings?.popupAutocomplete]);
 
   useEffect(() => {
     const handleDocumentPointerDown = (event: MouseEvent) => {
@@ -215,7 +228,8 @@ export function PopupApp() {
   }, [currentResponse]);
 
   const canSearch = useMemo(() => Boolean(query.trim() && dict1 && dict2), [query, dict1, dict2]);
-  const hasAutocomplete = autocompleteItems.length > 0;
+  const hasAutocomplete =
+    Boolean(settings?.popupAutocomplete) && autocompleteItems.length > 0;
 
   async function persistLanguageChoice(nextDict1: typeof dict1, nextDict2: typeof dict2): Promise<void> {
     if (!settings || settings.defaultLang || !settings.lastLang) {

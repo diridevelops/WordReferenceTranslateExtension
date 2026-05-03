@@ -79,6 +79,22 @@ export function TranslationSection(props: {
             await onSave({ lastLang: checked, defaultLang: !checked });
           }}
         />
+
+        <ToggleField
+          id="popupAutocomplete"
+          checked={settings.popupAutocomplete}
+          label={msg(
+            "optPopupAutocompleteLab",
+            "Show word autocomplete in the popup search",
+          )}
+          help={msg(
+            "optPopupAutocompleteHelp",
+            "While typing in the extension popup, suggested words will appear below the search box",
+          )}
+          onChange={async (checked) => {
+            await onSave({ popupAutocomplete: checked });
+          }}
+        />
       </div>
     </section>
   );

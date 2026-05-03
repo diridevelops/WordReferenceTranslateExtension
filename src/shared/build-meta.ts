@@ -2,6 +2,7 @@ declare const __WRT_EXTENSION_AUTHOR_NAME__: string;
 declare const __WRT_EXTENSION_AUTHOR_EMAIL__: string;
 declare const __WRT_EXTENSION_AUTHOR_WEBSITE__: string;
 declare const __WRT_EXTENSION_REPO_URL__: string;
+declare const __WRT_EXTENSION_DONATION_URL__: string;
 declare const __WRT_CHANGELOG_ITEMS__: string[];
 
 export const EXTENSION_AUTHOR_NAME =
@@ -19,6 +20,10 @@ export const EXTENSION_AUTHOR_WEBSITE =
 export const EXTENSION_REPO_URL =
   typeof __WRT_EXTENSION_REPO_URL__ !== "undefined"
     ? __WRT_EXTENSION_REPO_URL__
+    : "";
+export const EXTENSION_DONATION_URL =
+  typeof __WRT_EXTENSION_DONATION_URL__ !== "undefined"
+    ? __WRT_EXTENSION_DONATION_URL__
     : "";
 export const CHANGELOG_ITEMS =
   typeof __WRT_CHANGELOG_ITEMS__ !== "undefined"

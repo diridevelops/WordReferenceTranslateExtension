@@ -67,9 +67,25 @@
         "message": "Les langues s\u00e9lectionn\u00e9es dans la fen\u00eatre popup seront m\u00e9moris\u00e9es pour la prochaine fois",
         "description": "Tooltip text"
     },
+    "optPopupAutocompleteLab": {
+        "message": "Afficher l\u2019autocompl\u00e9tion des mots dans la recherche de la fen\u00eatre popup",
+        "description": "Toggle label for popup autocomplete"
+    },
+    "optPopupAutocompleteHelp": {
+        "message": "Lorsque vous tapez dans la fen\u00eatre popup de l\u2019extension, des mots sugg\u00e9r\u00e9s apparaissent sous le champ de recherche",
+        "description": "Tooltip text"
+    },
     "optInSite": {
         "message": "Int\u00e9gration dans le site",
         "description": "'In-Site integration' - fieldset text"
+    },
+    "optPageAccessEnabled": {
+        "message": "L\u2019acc\u00e8s optionnel aux pages est activ\u00e9.",
+        "description": "Text shown when optional page access is already granted"
+    },
+    "optPageAccessPrompt": {
+        "message": "Autorisez l\u2019acc\u00e8s aux pages pour utiliser les fonctions de traduction int\u00e9gr\u00e9es aux pages.",
+        "description": "Text shown when optional page access is still required"
     },
     "optTranslContextLab": {
         "message": "Traduit le mot s\u00e9lectionn\u00e9 depuis le menu contextuel (clic droit)",
@@ -96,8 +112,8 @@
         "description": "Tooltip text"
     },
     "optTranslISPopupCombLab": {
-        "message": "Traduit le mot s\u00e9lectionn\u00e9 directement dans la page \u00e0 l'aide de cette combinaison de touches (cliquez pour modifier)",
-        "description": "'Translate the selected word directly in the page by pressing this combination (click to modify)' - checkbox text"
+        "message": "Traduit le mot s\u00e9lectionn\u00e9 directement dans la page \u00e0 l'aide de cette combinaison de touches",
+        "description": "'Translate the selected word directly in the page by pressing this combination' - checkbox text"
     },
     "optTranslISPopupCombHelp": {
         "message": "Maximum 3 touches. Certaines combinaisons sont r\u00e9serv\u00e9es par le navigateur et ne peuvent \u00eatre utilis\u00e9es",
@@ -136,8 +152,16 @@
         "description": "Collaborate at the translation text"
     },
     "optOpenSourceText": {
-        "message": "Cette extension est open source et le code source est disponible ici :",
+        "message": "Cette extension est open-source et le code source est disponible ici :",
         "description": "Open-source contact text"
+    },
+    "optDonationText": {
+        "message": "Soutenez ce projet :",
+        "description": "Donation section intro text"
+    },
+    "optDonationButton": {
+        "message": "Offrez-moi un caf\u00e9 ❤️",
+        "description": "Donation button label"
     },
     "optContacts": {
         "message": "Contacts",
