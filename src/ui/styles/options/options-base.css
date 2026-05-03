@@ -271,8 +271,10 @@ a {
 
 .shortcut-builder {
   width: fit-content;
-  display: grid;
-  gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
   padding: 10px;
   border: 1px solid #d7d9e4;
   border-radius: 6px;
@@ -280,24 +282,30 @@ a {
 }
 
 .shortcut-builder__summary {
+  flex: 0 0 100%;
   color: #243b7f;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .shortcut-builder__group {
-  display: grid;
-  gap: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .shortcut-builder__label {
   color: #555d73;
   font-size: 13px;
+  white-space: nowrap;
 }
 
 .shortcut-builder__modifiers {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .shortcut-builder__modifier {
@@ -313,6 +321,10 @@ a {
 
 .shortcut-builder__modifier input {
   margin: 0;
+}
+
+.shortcut-builder .options-select {
+  min-width: 128px;
 }
 
 .ghost-button {

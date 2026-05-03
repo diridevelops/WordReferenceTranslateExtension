@@ -100,7 +100,7 @@ export function InSiteSection(props: {
           checked={settings.translISPopupComb}
           label={msg(
             "optTranslISPopupCombLab",
-            "Translate the selected word directly in the page by pressing this combination (click to modify)",
+            "Translate the selected word directly in the page by pressing this combination",
           )}
           help={msg(
             "optTranslISPopupCombHelp",

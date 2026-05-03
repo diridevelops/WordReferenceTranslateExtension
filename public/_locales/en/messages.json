@@ -140,8 +140,8 @@
   },
 
   "optTranslISPopupCombLab": {
-    "message": "Translate the selected word directly in the page by pressing this combination (click to modify)",
-    "description": "'Translate the selected word directly in the page by pressing this combination (click to modify)' - checkbox text"
+    "message": "Translate the selected word directly in the page by pressing this combination",
+    "description": "'Translate the selected word directly in the page by pressing this combination' - checkbox text"
   },
 
   "optTranslISPopupCombHelp": {

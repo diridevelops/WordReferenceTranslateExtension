@@ -118,8 +118,8 @@
     "description": "Tooltip text"
   },
   "optTranslISPopupCombLab": {
-    "message": "Traduzca la palabra seleccionada directamente en la p\u00e1gina web pulsando esta combinaci\u00f3n (haga clic para modificar)",
-    "description": "'Translate the selected word directly in the page by pressing this combination (click to modify)' - checkbox text"
+    "message": "Traduzca la palabra seleccionada directamente en la p\u00e1gina web pulsando esta combinaci\u00f3n",
+    "description": "'Translate the selected word directly in the page by pressing this combination' - checkbox text"
   },
   "optTranslISPopupCombHelp": {
     "message": "Tres teclas m\u00e1ximo. Algunos atajos est\u00e1n reservados por el navegador y no pueden ser ingresados",

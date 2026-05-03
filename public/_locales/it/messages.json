@@ -118,8 +118,8 @@
     "description": "Tooltip text"
   },
   "optTranslISPopupCombLab": {
-    "message": "Traduci la parola selezionata direttamente nella pagina premendo questa combinazione (clicca per modificare)",
-    "description": "'Translate the selected word directly in the page by pressing this combination (click to modify)' - checkbox text"
+    "message": "Traduci la parola selezionata direttamente nella pagina premendo questa combinazione",
+    "description": "'Translate the selected word directly in the page by pressing this combination' - checkbox text"
   },
   "optTranslISPopupCombHelp": {
     "message": "Max 3 tasti. Alcune scorciatoie sono riservate dal browser e non possono essere inserite",

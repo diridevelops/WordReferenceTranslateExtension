@@ -112,8 +112,8 @@
         "description": "Tooltip text"
     },
     "optTranslISPopupCombLab": {
-        "message": "Traduit le mot s\u00e9lectionn\u00e9 directement dans la page \u00e0 l'aide de cette combinaison de touches (cliquez pour modifier)",
-        "description": "'Translate the selected word directly in the page by pressing this combination (click to modify)' - checkbox text"
+        "message": "Traduit le mot s\u00e9lectionn\u00e9 directement dans la page \u00e0 l'aide de cette combinaison de touches",
+        "description": "'Translate the selected word directly in the page by pressing this combination' - checkbox text"
     },
     "optTranslISPopupCombHelp": {
         "message": "Maximum 3 touches. Certaines combinaisons sont r\u00e9serv\u00e9es par le navigateur et ne peuvent \u00eatre utilis\u00e9es",
