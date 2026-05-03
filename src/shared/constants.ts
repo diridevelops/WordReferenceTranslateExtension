@@ -36,6 +36,7 @@ export const DEFAULT_SETTINGS: Settings = {
   version: 2,
   defaultLang: false,
   lastLang: true,
+  popupAutocomplete: true,
   dict1: null,
   dict2: null,
   translContext: false,

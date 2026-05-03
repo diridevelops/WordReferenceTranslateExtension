@@ -71,6 +71,16 @@
     "message": "Los idiomas que seleccione en la ventana emergente se guardar\u00e1n para su pr\u00f3ximo uso",
     "description": "Tooltip text"
   },
+
+  "optPopupAutocompleteLab": {
+    "message": "Mostrar autocompletado de palabras en la b\u00fasqueda de la ventana emergente",
+    "description": "Toggle label for popup autocomplete"
+  },
+
+  "optPopupAutocompleteHelp": {
+    "message": "Mientras escribe en la ventana emergente de la extensi\u00f3n, aparecer\u00e1n palabras sugeridas debajo del cuadro de b\u00fasqueda",
+    "description": "Tooltip text"
+  },
   "optInSite": {
     "message": "Integraci\u00f3n al navegador",
     "description": "'In-Site integration' - fieldset text"

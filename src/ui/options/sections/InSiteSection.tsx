@@ -29,7 +29,7 @@ export function InSiteSection(props: {
         <p className="options-muted">
           {pageAccess
             ? "Optional page access is enabled."
-            : "Enable page access to use context menu and in-page translation features."}
+            : "Allow page access to use in-page translation features."}
         </p>
 
         <ToggleField

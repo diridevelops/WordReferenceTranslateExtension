@@ -29,6 +29,7 @@ export interface Settings {
   version: 2;
   defaultLang: boolean;
   lastLang: boolean;
+  popupAutocomplete: boolean;
   dict1: LanguageCode | null;
   dict2: Exclude<LanguageCode, "auto"> | null;
   translContext: boolean;

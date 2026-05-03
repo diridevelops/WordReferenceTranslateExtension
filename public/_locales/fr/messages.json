@@ -67,6 +67,14 @@
         "message": "Les langues s\u00e9lectionn\u00e9es dans la fen\u00eatre popup seront m\u00e9moris\u00e9es pour la prochaine fois",
         "description": "Tooltip text"
     },
+    "optPopupAutocompleteLab": {
+        "message": "Afficher l\u2019autocompl\u00e9tion des mots dans la recherche de la fen\u00eatre popup",
+        "description": "Toggle label for popup autocomplete"
+    },
+    "optPopupAutocompleteHelp": {
+        "message": "Lorsque vous tapez dans la fen\u00eatre popup de l\u2019extension, des mots sugg\u00e9r\u00e9s apparaissent sous le champ de recherche",
+        "description": "Tooltip text"
+    },
     "optInSite": {
         "message": "Int\u00e9gration dans le site",
         "description": "'In-Site integration' - fieldset text"

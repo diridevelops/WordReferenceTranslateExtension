@@ -88,6 +88,16 @@
     "description": "Tooltip text"
   },
 
+  "optPopupAutocompleteLab": {
+    "message": "Show word autocomplete in the popup search",
+    "description": "Toggle label for popup autocomplete"
+  },
+
+  "optPopupAutocompleteHelp": {
+    "message": "While typing in the extension popup, suggested words will appear below the search box",
+    "description": "Tooltip text"
+  },
+
   
   "optInSite": {
     "message": "In-site integration",

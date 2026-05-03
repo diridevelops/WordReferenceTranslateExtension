@@ -71,6 +71,16 @@
     "message": "Le lingue selezionate nel popup saranno salvate per il prossimo utilizzo",
     "description": "Tooltip text"
   },
+
+  "optPopupAutocompleteLab": {
+    "message": "Mostra l'autocompletamento delle parole nella ricerca della finestra dell'estensione",
+    "description": "Toggle label for popup autocomplete"
+  },
+
+  "optPopupAutocompleteHelp": {
+    "message": "Mentre scrivi nella finestra dell'estensione, sotto la casella di ricerca appariranno parole suggerite",
+    "description": "Tooltip text"
+  },
   "optInSite": {
     "message": "Integrazione nei siti",
     "description": "'In-Site integration' - fieldset text"
