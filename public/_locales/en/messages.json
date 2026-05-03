@@ -13,7 +13,6 @@
     "message": "Translate '%s'",
     "description": "Text of context menu item that logs the selected text when clicked."
   },
-
   
   "popTitle": {
     "message": "WordReference Popup",
@@ -56,7 +55,6 @@
     "message": "Similar words",
     "description": "Label shown above similar words in the not-found fallback card"
   },
-
   
   "optTitle": {
     "message": "Settings",
@@ -97,7 +95,6 @@
     "message": "While typing in the extension popup, suggested words will appear below the search box",
     "description": "Tooltip text"
   },
-
   
   "optInSite": {
     "message": "In-site integration",
@@ -195,9 +192,20 @@
   },
 
   "optOpenSourceText": {
-    "message": "This extension is open source and the source code is available here:",
+    "message": "This extension is open-source and the source code is available here:",
     "description": "Open-source contact text"
   },
+
+  "optDonationText": {
+    "message": "Support this project:",
+    "description": "Donation section intro text"
+  },
+
+  "optDonationButton": {
+    "message": "Buy me a coffe ❤️",
+    "description": "Donation button label"
+  },
+
   "optContacts": {
     "message": "Contacts",
     "description": "'Contacts' - fieldset text"

@@ -158,8 +158,16 @@
     "description": "Collaborate at the translation text"
   },
   "optOpenSourceText": {
-    "message": "Questa estensione \u00e8 open source e il codice sorgente \u00e8 disponibile qui:",
+    "message": "Questa estensione \u00e8 open-source e il codice sorgente \u00e8 disponibile qui:",
     "description": "Open-source contact text"
+  },
+  "optDonationText": {
+    "message": "Supporta questo progetto:",
+    "description": "Donation section intro text"
+  },
+  "optDonationButton": {
+    "message": "Offrimi un caff\u00e8 ❤️",
+    "description": "Donation button label"
   },
   "optContacts": {
     "message": "Contatti",

@@ -1,5 +1,6 @@
 import {
   EXTENSION_AUTHOR_EMAIL,
+  EXTENSION_DONATION_URL,
   EXTENSION_REPO_URL,
 } from "@/shared/build-meta";
 import { msg } from "@/shared/i18n";
@@ -27,7 +28,7 @@ export function ContactsSection() {
           <p className="options-muted">
             {msg(
               "optOpenSourceText",
-              "This extension is open source and the source code is available here:",
+              "This extension is open-source and the source code is available here:",
             )}{" "}
             <a
               href={EXTENSION_REPO_URL}
@@ -37,6 +38,21 @@ export function ContactsSection() {
               {EXTENSION_REPO_URL}
             </a>
           </p>
+        ) : null}
+        {EXTENSION_DONATION_URL ? (
+          <div className="options-donation">
+            <p className="options-muted">
+              {msg("optDonationText", "Support this project:")}
+              <a
+                className="options-donation__button"
+                href={EXTENSION_DONATION_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {msg("optDonationButton", "Buy me a coffe ❤️")}
+              </a>
+            </p>
+          </div>
         ) : null}
       </div>
     </section>

@@ -335,6 +335,33 @@ a {
   gap: 10px;
 }
 
+.options-donation {
+  display: grid;
+  gap: 8px;
+}
+
+.options-donation__button {
+  width: fit-content;
+  min-width: 190px;
+  margin-left: 0.5rem;
+  padding: 6px 12px;
+  border: 1px solid #d4a300;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #ffd85a 0%, #e9bb1a 100%);
+  box-shadow: 0 2px 8px rgba(183, 136, 0, 0.18);
+  color: #111;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+}
+
+.options-donation__button:hover,
+.options-donation__button:focus-visible {
+  background: linear-gradient(180deg, #ffe279 0%, #efc631 100%);
+  color: #111;
+  text-decoration: none;
+}
+
 .options-list {
   margin: 0;
   padding-left: 18px;

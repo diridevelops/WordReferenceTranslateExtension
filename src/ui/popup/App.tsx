@@ -80,10 +80,18 @@ export function PopupApp() {
   }, [settings]);
 
   useEffect(() => {
+    let frameId: number | null = null;
+
     if (!settings?.popupAutocomplete || loading) {
-      setAutocompleteItems([]);
-      setActiveAutocompleteIndex(-1);
-      return;
+      frameId = window.requestAnimationFrame(() => {
+        setAutocompleteItems([]);
+        setActiveAutocompleteIndex(-1);
+      });
+      return () => {
+        if (frameId !== null) {
+          window.cancelAnimationFrame(frameId);
+        }
+      };
     }
 
     let cancelled = false;
@@ -104,6 +112,9 @@ export function PopupApp() {
 
     return () => {
       cancelled = true;
+      if (frameId !== null) {
+        window.cancelAnimationFrame(frameId);
+      }
     };
   }, [query, dict1, dict2, loading, settings?.popupAutocomplete]);
 

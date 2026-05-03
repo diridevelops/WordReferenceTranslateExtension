@@ -161,6 +161,14 @@
     "message": "Esta extensi\u00f3n es de c\u00f3digo abierto y el c\u00f3digo fuente est\u00e1 disponible aqu\u00ed:",
     "description": "Open-source contact text"
   },
+  "optDonationText": {
+    "message": "Apoya este proyecto:",
+    "description": "Donation section intro text"
+  },
+  "optDonationButton": {
+    "message": "C\u00f3mprame un caf\u00e9 ❤️",
+    "description": "Donation button label"
+  },
   "optContacts": {
     "message": "Contacto",
     "description": "'Contacts' - fieldset text"

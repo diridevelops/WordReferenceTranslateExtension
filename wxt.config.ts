@@ -15,6 +15,7 @@ function loadAppEnv(mode: string) {
     authorEmail: env.WRT_EXTENSION_AUTHOR_EMAIL?.trim() ?? "",
     authorWebsite: env.WRT_EXTENSION_AUTHOR_WEBSITE?.trim() ?? "",
     repoUrl: env.WRT_EXTENSION_REPO_URL?.trim() ?? "",
+    donationUrl: env.WRT_EXTENSION_DONATION_URL?.trim() ?? "",
     changelogItems,
   };
 }
@@ -96,6 +97,7 @@ export default defineConfig({
         __WRT_EXTENSION_AUTHOR_EMAIL__: JSON.stringify(appEnv.authorEmail),
         __WRT_EXTENSION_AUTHOR_WEBSITE__: JSON.stringify(appEnv.authorWebsite),
         __WRT_EXTENSION_REPO_URL__: JSON.stringify(appEnv.repoUrl),
+        __WRT_EXTENSION_DONATION_URL__: JSON.stringify(appEnv.donationUrl),
         __WRT_CHANGELOG_ITEMS__: JSON.stringify(appEnv.changelogItems),
       },
     };

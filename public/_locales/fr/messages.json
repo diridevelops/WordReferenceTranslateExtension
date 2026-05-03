@@ -152,8 +152,16 @@
         "description": "Collaborate at the translation text"
     },
     "optOpenSourceText": {
-        "message": "Cette extension est open source et le code source est disponible ici :",
+        "message": "Cette extension est open-source et le code source est disponible ici :",
         "description": "Open-source contact text"
+    },
+    "optDonationText": {
+        "message": "Soutenez ce projet :",
+        "description": "Donation section intro text"
+    },
+    "optDonationButton": {
+        "message": "Offrez-moi un caf\u00e9 ❤️",
+        "description": "Donation button label"
     },
     "optContacts": {
         "message": "Contacts",
