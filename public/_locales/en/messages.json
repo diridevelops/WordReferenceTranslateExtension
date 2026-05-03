@@ -103,6 +103,14 @@
     "message": "In-site integration",
     "description": "'In-Site integration' - fieldset text"
   },
+  "optPageAccessEnabled": {
+    "message": "Optional page access is enabled.",
+    "description": "Text shown when optional page access is already granted"
+  },
+  "optPageAccessPrompt": {
+    "message": "Allow page access to use in-page translation features.",
+    "description": "Text shown when optional page access is still required"
+  },
 
   "optTranslContextLab": {
     "message": "Translate the selected word from the context-menu (right-click)",

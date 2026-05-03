@@ -28,8 +28,14 @@ export function InSiteSection(props: {
       <div className="options-card__body">
         <p className="options-muted">
           {pageAccess
-            ? "Optional page access is enabled."
-            : "Allow page access to use in-page translation features."}
+            ? msg(
+                "optPageAccessEnabled",
+                "Optional page access is enabled.",
+              )
+            : msg(
+                "optPageAccessPrompt",
+                "Allow page access to use in-page translation features.",
+              )}
         </p>
 
         <ToggleField

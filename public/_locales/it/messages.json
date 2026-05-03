@@ -85,6 +85,14 @@
     "message": "Integrazione nei siti",
     "description": "'In-Site integration' - fieldset text"
   },
+  "optPageAccessEnabled": {
+    "message": "L'accesso opzionale alle pagine \u00e8 abilitato.",
+    "description": "Text shown when optional page access is already granted"
+  },
+  "optPageAccessPrompt": {
+    "message": "Consenti l'accesso alle pagine per usare le funzioni di traduzione integrate nelle pagine web.",
+    "description": "Text shown when optional page access is still required"
+  },
   "optTranslContextLab": {
     "message": "Traduci la parola selezionata dal menu di contesto (click destro)",
     "description": "'Translate the selected word from the context-menu (right-click)' - checkbox text"
