@@ -21,6 +21,7 @@ function loadAppEnv(mode: string) {
 
 function buildManifest(env: ConfigEnv): UserManifest {
   const appEnv = loadAppEnv(env.mode);
+  const optionalPageOrigins = ["http://*/*", "https://*/*"];
 
   if (env.browser === "firefox" && env.manifestVersion === 3 && !appEnv.addonId) {
     throw new Error(
@@ -35,7 +36,6 @@ function buildManifest(env: ConfigEnv): UserManifest {
     version: "3.0.0",
     permissions: ["storage", "contextMenus", "scripting"],
     host_permissions: ["https://www.wordreference.com/*"],
-    optional_host_permissions: ["http://*/*", "https://*/*"],
     icons: {
       16: "/icons/icon/icon-16.png",
       32: "/icons/icon/icon-32.png",
@@ -61,14 +61,19 @@ function buildManifest(env: ConfigEnv): UserManifest {
     (manifest as unknown as { author?: string }).author = appEnv.authorEmail;
   }
 
+  if (env.browser === "firefox") {
+    manifest.optional_permissions = [...optionalPageOrigins] as unknown as NonNullable<
+      UserManifest["optional_permissions"]
+    >;
+  } else {
+    manifest.optional_host_permissions = [...optionalPageOrigins];
+  }
+
   if (env.browser === "firefox" && env.manifestVersion === 3) {
     manifest.browser_specific_settings = {
       gecko: {
         id: appEnv.addonId,
         strict_min_version: appEnv.strictMinVersion,
-        data_collection_permissions: {
-          required: ["none"],
-        },
       },
     };
   }

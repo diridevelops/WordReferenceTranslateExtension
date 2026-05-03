@@ -11,13 +11,7 @@ function parseFirstElement(
   document: Document,
   html: string,
 ): HTMLElement | null {
-  if (!html) {
-    return null;
-  }
-
-  const template = document.createElement("template");
-  template.innerHTML = html.trim();
-  return template.content.firstElementChild as HTMLElement | null;
+  return parseElements(document, html)[0] ?? null;
 }
 
 function parseElements(
@@ -28,9 +22,15 @@ function parseElements(
     return [];
   }
 
-  const template = document.createElement("template");
-  template.innerHTML = html.trim();
-  return [...template.content.children] as HTMLElement[];
+  const DOMParserCtor = document.defaultView?.DOMParser ?? globalThis.DOMParser;
+  if (!DOMParserCtor) {
+    return [];
+  }
+
+  const parsed = new DOMParserCtor().parseFromString(html.trim(), "text/html");
+  return [...parsed.body.children].map((node) =>
+    document.importNode(node, true) as HTMLElement,
+  );
 }
 
 function setupAudioWidget(
@@ -139,7 +139,19 @@ function renderFoundResult(
 
   const sourceButton = ownerDocument.createElement("div");
   sourceButton.className = "WRText-button";
-  sourceButton.innerHTML = `<a id="WRText-sourceLink" href="${result.sourceUrl}" target="_blank" rel="noopener noreferrer" title="${msg("popSourceBtn", "Open in WordReference.com")}"></a><span class="WRText-buttonLab">${msg("popSourceBtn", "Open in WordReference.com")}</span>`;
+  const sourceLinkTitle = msg("popSourceBtn", "Open in WordReference.com");
+  const sourceLink = ownerDocument.createElement("a");
+  sourceLink.id = "WRText-sourceLink";
+  sourceLink.href = result.sourceUrl;
+  sourceLink.target = "_blank";
+  sourceLink.rel = "noopener noreferrer";
+  sourceLink.title = sourceLinkTitle;
+
+  const sourceLabel = ownerDocument.createElement("span");
+  sourceLabel.className = "WRText-buttonLab";
+  sourceLabel.textContent = sourceLinkTitle;
+
+  sourceButton.append(sourceLink, sourceLabel);
   header.append(sourceButton);
 
   const linksAnchor = ownerDocument.createElement("a");
@@ -163,8 +175,7 @@ function renderFoundResult(
   const article = parseFirstElement(ownerDocument, result.bodyHtml);
   const linksNode = parseFirstElement(ownerDocument, result.linksHtml);
 
-  container.innerHTML = "";
-  container.append(header);
+  container.replaceChildren(header);
   if (article) {
     container.append(article);
   }
@@ -234,8 +245,7 @@ function renderNotFoundResult(
     card.append(suggestions);
   }
 
-  container.innerHTML = "";
-  container.append(card);
+  container.replaceChildren(card);
 }
 
 export interface LegacyPopupHandlers {

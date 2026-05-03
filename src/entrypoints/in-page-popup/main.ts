@@ -5,6 +5,12 @@ import type { InPagePopupMessage } from "@/shared/types";
 
 const container = document.getElementById("WRText-content");
 
+function renderLoader(target: HTMLElement): void {
+  const loader = target.ownerDocument.createElement("div");
+  loader.className = "WRTloader";
+  target.replaceChildren(loader);
+}
+
 function injectStyles(): void {
   const legacyStyle = document.createElement("style");
   legacyStyle.textContent = popupCss;
@@ -30,7 +36,7 @@ window.addEventListener("message", (event: MessageEvent) => {
 
   if (data.type === "WRT_LOADING") {
     applyTheme(data.payload.theme, data.payload.fontSize);
-    container.innerHTML = '<div class="WRTloader"></div>';
+    renderLoader(container);
     return;
   }
 

@@ -1,3 +1,10 @@
+@layer tokens, base;
+
+@import "../themes/theme-tokens.css";
+@import "../themes/theme-wordreference.css";
+@import "../themes/theme-darkula.css";
+@import "../themes/theme-midnight.css";
+
 @layer base {
   .wrt-inline-icon,
   .wrt-inline-popup,
@@ -43,12 +50,15 @@
     z-index: 2147483647;
     width: 18px;
     height: 10px;
+    overflow: visible;
+    pointer-events: none;
     filter: drop-shadow(var(--shadow-inline-arrow));
   }
 
   .wrt-inline-popup__arrow::before,
   .wrt-inline-popup__arrow::after {
     content: "";
+    display: block;
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
