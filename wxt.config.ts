@@ -35,7 +35,7 @@ function buildManifest(env: ConfigEnv): UserManifest {
     name: "__MSG_extensionName__",
     description: "__MSG_extensionDescription__",
     version: "3.0.0",
-    permissions: ["storage", "contextMenus", "scripting"],
+    permissions: ["storage", "contextMenus", "scripting", "cookies"],
     host_permissions: ["https://www.wordreference.com/*"],
     icons: {
       16: "/icons/icon/icon-16.png",

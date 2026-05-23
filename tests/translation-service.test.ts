@@ -1,6 +1,18 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { translateWord } from "@/core/wordreference";
 
+const browserMock = vi.hoisted(() => ({
+  cookiesSet: vi.fn(),
+}));
+
+vi.mock("wxt/browser", () => ({
+  browser: {
+    cookies: {
+      set: browserMock.cookiesSet,
+    },
+  },
+}));
+
 const htmlWithResult =
   '<div id="articleWRD"><table><tr><td>hello</td></tr></table></div>';
 const htmlWithoutResult = `
@@ -18,6 +30,7 @@ const htmlWithoutResult = `
 describe("translateWord", () => {
   afterEach(() => {
     vi.restoreAllMocks();
+    browserMock.cookiesSet.mockReset();
   });
 
   it("returns the direct lookup when the first pair resolves", async () => {
@@ -118,6 +131,80 @@ describe("translateWord", () => {
     expect(result.meta.resolvedDict1).toBe("en");
     expect(result.meta.sourceUrl).toContain("/enit/tets");
     expect(result.html).toContain("noTransFound");
+  });
+
+  it("sets the WordReference challenge cookie and retries one 418 response", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 418,
+        text: async () =>
+          '<script>document.cookie = "nginx_wr_human=1; Path=/; Domain=wordreference.com;"; window.location.reload();</script>',
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        text: async () => htmlWithResult,
+      });
+
+    browserMock.cookiesSet.mockResolvedValue({
+      name: "nginx_wr_human",
+      value: "1",
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const result = await translateWord({
+      dict1: "en",
+      dict2: "it",
+      word: "hello",
+    });
+
+    expect(result.ok).toBe(true);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      1,
+      "https://www.wordreference.com/enit/hello",
+      {
+        method: "GET",
+        credentials: "include",
+      },
+    );
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      2,
+      "https://www.wordreference.com/enit/hello",
+      {
+        method: "GET",
+        credentials: "include",
+      },
+    );
+    expect(browserMock.cookiesSet).toHaveBeenCalledWith({
+      url: "https://www.wordreference.com/",
+      name: "nginx_wr_human",
+      value: "1",
+      path: "/",
+    });
+  });
+
+  it("reports an explicit error when the WordReference challenge cannot be completed", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: false,
+        status: 418,
+        text: async () =>
+          '<script>document.cookie = "nginx_wr_human=1; Path=/; Domain=wordreference.com;"; window.location.reload();</script>',
+      }),
+    );
+    browserMock.cookiesSet.mockResolvedValue(null);
+
+    await expect(
+      translateWord({
+        dict1: "en",
+        dict2: "it",
+        word: "hello",
+      }),
+    ).rejects.toThrow("WordReference challenge could not be completed: 418");
   });
 
   it("tries multiple language pairs for auto-detect", async () => {

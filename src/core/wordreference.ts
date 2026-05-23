@@ -1,3 +1,4 @@
+import { browser } from "wxt/browser";
 import { MAX_SEARCH_LENGTH } from "@/shared/constants";
 import type {
   LanguageCode,
@@ -8,10 +9,12 @@ import type {
 import { getAutoDetectCandidateLanguages } from "./auto-detect";
 
 const WORDREFERENCE_ROOT = "https://www.wordreference.com";
+const WORDREFERENCE_CHALLENGE_COOKIE = "nginx_wr_human";
 const VALID_QUERY_RE = /^[^<>%\\]*$/;
 const HAS_RESULTS_RE =
   /id=["']articleWRD["'][\s\S]*?(?:<tr|class=["']WRD["'])/i;
 const HAS_NOT_FOUND_RE = /id=["']noTransFound["']/i;
+const HAS_WORDREFERENCE_CHALLENGE_RE = /\bnginx_wr_human=1\b/;
 
 type LookupClassification = "found" | "not_found" | "unexpected";
 
@@ -47,12 +50,21 @@ function classifyLookupHtml(html: string): LookupClassification {
   return "unexpected";
 }
 
-async function fetchLookup(
+function isWordReferenceChallenge(response: {
+  html: string;
+  status: number;
+}): boolean {
+  return (
+    response.status === 418 && HAS_WORDREFERENCE_CHALLENGE_RE.test(response.html)
+  );
+}
+
+async function requestLookup(
   url: string,
 ): Promise<{ html: string; ok: boolean; status: number }> {
   const response = await fetch(url, {
     method: "GET",
-    credentials: "omit",
+    credentials: "include",
   });
 
   return {
@@ -60,6 +72,44 @@ async function fetchLookup(
     ok: response.ok,
     status: response.status,
   };
+}
+
+async function setWordReferenceChallengeCookie(status: number): Promise<void> {
+  try {
+    const cookie = await browser.cookies.set({
+      url: `${WORDREFERENCE_ROOT}/`,
+      name: WORDREFERENCE_CHALLENGE_COOKIE,
+      value: "1",
+      path: "/",
+    });
+
+    if (!cookie) {
+      throw new Error("Cookie was not set");
+    }
+  } catch {
+    throw new Error(`WordReference challenge could not be completed: ${status}`);
+  }
+}
+
+async function fetchLookup(
+  url: string,
+): Promise<{ html: string; ok: boolean; status: number }> {
+  const response = await requestLookup(url);
+
+  if (!isWordReferenceChallenge(response)) {
+    return response;
+  }
+
+  await setWordReferenceChallengeCookie(response.status);
+  const retryResponse = await requestLookup(url);
+
+  if (isWordReferenceChallenge(retryResponse)) {
+    throw new Error(
+      `WordReference challenge could not be completed: ${retryResponse.status}`,
+    );
+  }
+
+  return retryResponse;
 }
 
 async function fetchLookupAttempt(
