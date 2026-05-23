@@ -34,7 +34,7 @@ function buildManifest(env: ConfigEnv): UserManifest {
     default_locale: "en",
     name: "__MSG_extensionName__",
     description: "__MSG_extensionDescription__",
-    version: "3.0.0",
+    version: "3.0.1",
     permissions: ["storage", "contextMenus", "scripting", "cookies"],
     host_permissions: ["https://www.wordreference.com/*"],
     icons: {
