@@ -361,6 +361,7 @@ export function PopupApp() {
             <input
               id="WRText-searchBox"
               type="text"
+              autoFocus
               value={query}
               placeholder={msg("popSearchBox", "Word to search")}
               maxLength={200}
