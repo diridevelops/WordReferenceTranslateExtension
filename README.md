@@ -1,5 +1,13 @@
 # WordReference Translate
 
+<p align="center">
+  <a href="https://addons.mozilla.org/it/firefox/addon/wordreference-translate/"><strong>Firefox Add-ons</strong></a>
+  &nbsp;|&nbsp;
+  <a href="https://chromewebstore.google.com/detail/wordreference-translate/pjbephkiebgcldoaijkepmljpgjpndal"><strong>Chrome Web Store</strong></a>
+  &nbsp;|&nbsp;
+  <a href="https://microsoftedge.microsoft.com/addons/detail/wordreference-translate/bllllbmfimfmagebjpcipbkckohdmfpi"><strong>Microsoft Edge Add-ons</strong></a>
+</p>
+
 WordReference Translate is a Manifest V3 browser extension for Edge, Chrome, and Firefox that let the user access [WordReference.com](https://wordreference.com) dictionaries conveniently from the extension popup window.
 
 ## Features
@@ -104,6 +112,7 @@ Required permissions:
 - `storage`
 - `contextMenus`
 - `scripting`
+- `cookies`
 - `https://www.wordreference.com/*`
 
 Optional host permissions:
