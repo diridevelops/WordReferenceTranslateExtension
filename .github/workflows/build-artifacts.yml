@@ -12,7 +12,7 @@ jobs:
     permissions:
       contents: read
     env:
-      WXT_FIREFOX_ADDON_ID: ${{ vars.WXT_FIREFOX_ADDON_ID || secrets.WXT_FIREFOX_ADDON_ID }}
+      WXT_FIREFOX_ADDON_ID: ${{ vars.WXT_FIREFOX_ADDON_ID }}
       WXT_FIREFOX_STRICT_MIN_VERSION: ${{ vars.WXT_FIREFOX_STRICT_MIN_VERSION || '115.0' }}
       WRT_EXTENSION_AUTHOR_NAME: ${{ vars.WRT_EXTENSION_AUTHOR_NAME }}
       WRT_EXTENSION_AUTHOR_EMAIL: ${{ vars.WRT_EXTENSION_AUTHOR_EMAIL }}
@@ -36,9 +36,22 @@ jobs:
       - name: Check Firefox add-on ID
         run: |
           if [ -z "$WXT_FIREFOX_ADDON_ID" ]; then
-            echo "WXT_FIREFOX_ADDON_ID must be configured as a GitHub repository variable or secret."
+            echo "WXT_FIREFOX_ADDON_ID must be configured as a GitHub repository variable."
             exit 1
           fi
+
+      - name: Create .env for source package
+        run: |
+          cat > .env <<EOF
+          WXT_FIREFOX_ADDON_ID=$WXT_FIREFOX_ADDON_ID
+          WXT_FIREFOX_STRICT_MIN_VERSION=$WXT_FIREFOX_STRICT_MIN_VERSION
+          WRT_EXTENSION_AUTHOR_NAME=$WRT_EXTENSION_AUTHOR_NAME
+          WRT_EXTENSION_AUTHOR_EMAIL=$WRT_EXTENSION_AUTHOR_EMAIL
+          WRT_EXTENSION_AUTHOR_WEBSITE=$WRT_EXTENSION_AUTHOR_WEBSITE
+          WRT_EXTENSION_REPO_URL=$WRT_EXTENSION_REPO_URL
+          WRT_EXTENSION_DONATION_URL=$WRT_EXTENSION_DONATION_URL
+          WRT_CHANGELOG_ITEMS=$WRT_CHANGELOG_ITEMS
+          EOF
 
       - name: Lint
         run: npm run lint
