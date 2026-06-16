@@ -1,4 +1,4 @@
-name: Store Artifacts
+name: Build Artifacts
 
 on:
   workflow_dispatch:
@@ -58,6 +58,10 @@ jobs:
       - name: Package Firefox
         run: npm run zip:firefox
 
+      - name: List packaged artifacts
+        run: |
+          ls -lh .output/*.zip
+
       - name: Upload store artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -65,3 +69,4 @@ jobs:
           path: .output/*.zip
           if-no-files-found: error
           compression-level: 0
+          include-hidden-files: true
